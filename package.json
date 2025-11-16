@@ -1,0 +1,51 @@
+{
+  "name": "where-is-waldo-api",
+  "version": "1.0.0",
+  "description": "TOP practice project of a Where's Waldo game api",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm run migrate:deploy",
+    "prisma:generate": "prisma generate --sql",
+    "db:reset": "prisma migrate reset -f && prisma generate",
+    "migrate:deploy": "prisma migrate deploy && prisma generate",
+    "test:reset": "NODE_ENV=test npm run db:reset",
+    "test": "NODE_ENV=test npm run db:reset && vitest --disableConsoleIntercept",
+    "start": "nodemon src/index.js",
+    "dev": "NODE_ENV=development nodemon src/index.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "babel-jest": "^30.2.0",
+    "ejs-lint": "^2.0.1",
+    "eslint": "^9.38.0",
+    "prisma": "^6.19.0",
+    "supertest": "^7.1.4",
+    "vitest": "^4.0.8"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^6.18.0",
+    "@prisma/client": "^6.19.0",
+    "@quixo3/prisma-session-store": "^3.1.13",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "express-validator": "^7.2.1",
+    "nodemon": "^3.1.10",
+    "passport": "^0.7.0",
+    "passport-cookie": "^1.0.9",
+    "pg": "^8.16.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hbar1st/where-is-waldo-api.git"
+  },
+  "author": "hbar1st",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hbar1st/where-is-waldo-api/issues"
+  },
+  "homepage": "https://github.com/hbar1st/where-is-waldo-api#readme"
+}
