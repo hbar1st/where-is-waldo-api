@@ -6,8 +6,8 @@
   "scripts": {
     "build": "npm run migrate:deploy",
     "prisma:generate": "prisma generate --sql",
-    "db:reset": "prisma migrate reset -f && prisma generate",
-    "migrate:deploy": "prisma migrate deploy && prisma generate",
+    "db:reset": "prisma migrate dev && prisma migrate reset -f && run prisma:generate",
+    "migrate:deploy": "prisma migrate deploy && run prisma:generate",
     "test:reset": "NODE_ENV=test npm run db:reset",
     "test": "NODE_ENV=test npm run db:reset && vitest --disableConsoleIntercept",
     "start": "nodemon src/index.js",

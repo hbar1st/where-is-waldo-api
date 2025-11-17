@@ -14,9 +14,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Session {
+model session {
   id        String   @id
   sid       String   @unique
   data      String   
   expiresAt   DateTime
+
+  @@map(name: "session")
 }
