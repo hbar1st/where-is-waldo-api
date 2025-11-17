@@ -42,6 +42,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// just sets up the basic route that describes the api
+import { indexRouter } from "./routers/indexRouter.js";
+app.use("/", indexRouter);
+
 // Catch-all for unhandled routes (must be placed last but before error handler)
 app.use((req, res) => {
   res.status(404).json({

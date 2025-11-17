@@ -14,11 +14,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model session {
+model Session {
   id        String   @id
   sid       String   @unique
-  data      String   
-  expiresAt   DateTime
+  data      String
+  expiresAt DateTime
 
   @@map(name: "session")
+}
+
+model Scene {
+  id      Int      @id @default(autoincrement())
+  url     String
+  answers Answer[]
+
+  @@map(name: "scene")
+}
+
+model Answer {
+  scene         Scene  @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  scene_id       Int    
+  character     Character
+  location_x     Float
+  location_y     Float
+
+  @@unique([scene_id, character])
+  @@map(name: "answer")
+}
+
+model CharacterName {
+  character Character @unique
+  name  String
+  @@map(name: "character_name")
+}
+
+enum Character {
+  ODLAW
+  WALDO
+  WIZARD_WHITEBEARD
+
+  @@map(name: "character" )
 }
