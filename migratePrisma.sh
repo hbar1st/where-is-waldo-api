@@ -9,14 +9,14 @@ echo "** setup the main db at $DATABASE_URL"
 
 npx prisma db push
 
-npx prisma migrate dev && npx prisma migrate reset -f
+npx prisma migrate dev
 
 npx prisma generate
 
 echo "** setup the test db at $TEST_DATABASE_URL"
 
 
-NOED_ENV=test npx prisma db push && npm run prisma:generate
+NOED_ENV=test npx prisma db push && npm run "db:reset"
 
 seed_db() { 
   echo -e "\nWorking on clearing/migrating/seeding table: $1\n"
@@ -24,7 +24,7 @@ seed_db() {
   PSQL="psql --username=hbar1st --dbname=$1 -t -q --no-align -c"
 
   echo "Clear all the rows"
-  $PSQL "truncate table answer,character_name,scene"
+  $PSQL "truncate table answer,character_name,scene,game,game_answer"
 
   echo "Insert the scene"
   SCENE_ID=$($PSQL "insert into scene (url) values ('https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg')returning (id)")

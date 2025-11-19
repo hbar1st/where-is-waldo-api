@@ -1,7 +1,9 @@
 import express from "express";
-export const indexRouter = express.Router();
+import { getScene, getCharacters } from "../controllers/gameController.js"
+import { checkSceneId } from "../validators/gameValidator.js"
+import { handleExpressValidationErrors } from "./routerUtil.js";
 
-const array = [];
+export const indexRouter = express.Router();
 
 indexRouter.get("/", (req, res) => {
   res.status(200).json({
@@ -10,3 +12,12 @@ indexRouter.get("/", (req, res) => {
   });
 });
 
+// getting a scene also starts a game (and the start time is recorded)
+indexRouter.get("/scene", getScene);
+
+indexRouter.get(
+  "/scene/:id/characters",
+  checkSceneId,
+  handleExpressValidationErrors,
+  getCharacters
+);

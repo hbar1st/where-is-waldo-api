@@ -5,9 +5,13 @@ import "dotenv/config";
 import { AppError }  from "./errors/AppError.js";
 import { ValidationError } from "./errors/ValidationError.js";
 import { exit } from "process";
+import { prisma } from "./middleware/prisma.mjs";
+import expressSession from "express-session";
+import { PrismaSessionStore } from "@quixo3/prisma-session-store";
+import { env } from 'node:process'
 
 
-if (!process.env.SESSION_SECRET) {
+if (!env.SESSION_SECRET) {
   console.log("found no session secret in .env, so must create one");
   const b = crypto.randomBytes(40); // any number over 32 is fine
   console.log(
@@ -25,8 +29,27 @@ app.use(express.json());
 app.use(
   cors({
     origin: "*",
-    allowedHeaders: ["Content-Type", "Authorization"],
-    exposedHeaders: ["Content-Type", "Authorization"],
+    //origin: "http://localhost:3000", // or your frontend origin
+    credentials: true, // allow cookies
+  })
+);
+
+app.use(
+  expressSession({
+    cookie: {
+      httpOnly: true,
+      secure: env.NODE_ENV === "production" ? true : false,
+      sameSite: "none", // required for cross-origin cookies
+      maxAge: 7 * 24 * 60 * 60 * 1000, // ms
+    },
+    secret: env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    store: new PrismaSessionStore(prisma, {
+      checkPeriod: 2 * 60 * 1000, //ms
+      dbRecordIdIsSessionId: true,
+      dbRecordIdFunction: undefined,
+    }),
   })
 );
 

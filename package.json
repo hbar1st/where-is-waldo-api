@@ -6,11 +6,11 @@
   "scripts": {
     "build": "npm run migrate:deploy",
     "prisma:generate": "prisma generate",
-    "migrate:update": "npx prisma migrate dev && npm run prisma:generate",
+    "migrate:update": "npx prisma migrate reset -f && npx prisma migrate dev && npm db:reset",
     "db:reset": "npx prisma migrate reset -f && npm run prisma:generate",
     "migrate:deploy": "prisma migrate deploy && npm run prisma:generate",
     "test:reset": "NODE_ENV=test npm run db:reset",
-    "test": "NODE_ENV=test npm run migrate:update && vitest --disableConsoleIntercept",
+    "test": "NODE_ENV=test npx prisma db push && vitest --disableConsoleIntercept",
     "start": "nodemon src/index.js",
     "dev": "NODE_ENV=development nodemon src/index.js"
   },

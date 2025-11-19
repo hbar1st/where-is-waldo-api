@@ -23,20 +23,44 @@ model Session {
   @@map(name: "session")
 }
 
+model Game {
+  id         Int             @id @default(autoincrement())
+  username   String          @default("anonymous")
+  start_time DateTime        @default(now())
+  end_time   DateTime?
+  scene      Scene           @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  scene_id   Int
+  answers    Game_Answer[]
+
+  @@map(name: "game")
+}
+
+model Game_Answer {
+  game       Game      @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  game_id    Int
+  character  Character
+  location_x Float
+  location_y Float
+
+  @@unique([game_id, character])
+  @@map(name: "game_answer")
+}
+
 model Scene {
   id      Int      @id @default(autoincrement())
-  url     String
+  url     String   @unique
   answers Answer[]
+  games   Game[]
 
   @@map(name: "scene")
 }
 
 model Answer {
-  scene         Scene  @relation(fields: [scene_id], references: [id], onDelete: Cascade)
-  scene_id       Int    
-  character     Character
-  location_x     Float
-  location_y     Float
+  scene      Scene     @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  scene_id   Int
+  character  Character
+  location_x Float
+  location_y Float
 
   @@unique([scene_id, character])
   @@map(name: "answer")
@@ -44,7 +68,8 @@ model Answer {
 
 model CharacterName {
   character Character @unique
-  name  String
+  name      String
+
   @@map(name: "character_name")
 }
 
@@ -53,5 +78,5 @@ enum Character {
   WALDO
   WIZARD_WHITEBEARD
 
-  @@map(name: "character" )
+  @@map(name: "character")
 }
