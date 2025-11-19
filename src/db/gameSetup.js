@@ -34,11 +34,12 @@ export async function getSceneCharacters(id) {
         scene_id: Number(id)
       },
       select: {
-        character: {
-          include: {
-            name: true
+          character_name: {
+            select: {
+              name: true
+            }
           }
-        }
+        
       }
     })
     return characters;

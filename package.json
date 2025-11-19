@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "TOP practice project of a Where's Waldo game api",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "build": "npm run migrate:deploy",
     "prisma:generate": "prisma generate",

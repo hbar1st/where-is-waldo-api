@@ -8,7 +8,7 @@ export class AppError extends Error {
     // So the error is neat when stringified. AppError: message instead of Error: message
     this.name = "AppError";
   }
-/* no longer need this since i fully switched to ESM 
+ /*
   static [Symbol.hasInstance](instance) {
     return instance.statusCode && instance.stackTrace && instance.timestamp && instance.name === "AppError"
   }

@@ -15,17 +15,30 @@ export async function getScene (req, res) {
       throw new AppError("Failed to find a scene");
     }
   } catch (error) {
-    console.log(error, error.stack);
+    console.error(error);
     throw error;
   }
 };
 
 export async function getCharacters(req, res) {
-  res.status(200).send("message");
-  /*
   try {
   const {id} = matchedData(req);
-    const characters = await getSceneCharacters(req.params.id)
+    const characters = await getSceneCharacters(id);
+    if (characters) {
+      console.log(characters);
+      res.status(200).json({
+        message: "success",
+        characters: characters.reduce((acc, el) => {
+          acc.push(el["character_name"].name);
+          return acc;
+        }, [])
+      });
+    } else {
+      throw new AppError("Failed to get the scene characters")
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
-  */
+  
 }

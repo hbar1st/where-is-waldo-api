@@ -8,6 +8,7 @@ export const checkSceneId = [
     .withMessage("A scene id is required to complete the request.")
     .isInt()
     .withMessage("The scene id should be an int")
+    .bail()
     .toInt()
     .custom(async (value) => {
       console.log("try to validate if the scene id exists: ", value);
