@@ -20,3 +20,9 @@ GET /scene/:id/characters  returns a list of character names and the enum values
 GET /game                  if the user's session cookie contains a valid game id, this returns a list of remaining characters and the location of the ones that were successfully found plus the game start time (as well as the current scene id and url). 
 If the user doesn't have a valid game id in a session cookie, then they will get a brand new game
 This is the main route that a client app would use to start a game as this route returns everything you need to get started (or complete an ongoing game)
+
+
+GET /scene/:id/topten      returns the top ten players and their game times for the scene being played
+
+PUT /game/:id/answer
+PUT /game/:id/username

@@ -53,17 +53,6 @@ app.use(
   })
 );
 
-// TODO need to initialize passport
-/*
-import passport from "../middleware/passport.js";
-app.use(passport.initialize());
-*/
-
-// set up the locals currentUser value before we do any rendering?? (not useful in a REST api? // TODO check into this - maybe not needed)
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
 
 // just sets up the basic route that describes the api
 import { indexRouter } from "./routers/indexRouter.js";

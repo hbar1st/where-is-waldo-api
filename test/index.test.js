@@ -43,6 +43,8 @@ test("GET / gives a cookie", async () => {
   expect(res.status).toEqual(200);
   expect(res.headers["set-cookie"]).toBeDefined();
   console.log("cookie: ", res.headers["set-cookie"]);
+
+  console.log("cookie: ", res.headers["set-cookie"]);
 });
 
 describe("initial game setup", () => {
@@ -62,18 +64,17 @@ describe("initial game setup", () => {
     expect(res.body.url).toBeTypeOf("string");
     expect(res.body.url).toMatch(/^https:\/\/.*\.jpg/);
     expect(res.body.id).toBeTypeOf("number");
-
-    console.log("cookie: ", res.headers["set-cookie"]);
+    //agent.jar.setCookie(...res.headers["set-cookie"])
   });
 
   test("GET /scene/:id/characters invalid scene id", async () => {
-    const sceneId = 'a';
-      console.log(`invalid scene id: ${sceneId}`);
-      const route = `/scene/${sceneId}/characters`;
-      const res = await agent
-        .get(route)
+    const sceneId = "a";
+    console.log(`invalid scene id: ${sceneId}`);
+    const route = `/scene/${sceneId}/characters`;
+    const res = await agent
+      .get(route)
 
-        .set("Accept", "application/json");
+      .set("Accept", "application/json");
 
     expect(res.status).toEqual(400);
     expect(res.body.timestamp).toBeDefined();
@@ -92,35 +93,36 @@ describe("initial game setup", () => {
     };
     expect(res.body.details[0]).toMatchObject(resDetails);
 
+    console.log("cookie: ", res.headers["set-cookie"]);
   });
 
-    test("GET /scene/:id/characters scnee id does not exist", async () => {
-      const sceneId = 0;
-      console.log(`invalid scene id: ${sceneId}`);
-      const route = `/scene/${sceneId}/characters`;
-      const res = await agent
-        .get(route)
+  test("GET /scene/:id/characters scnee id does not exist", async () => {
+    const sceneId = 0;
+    console.log(`invalid scene id: ${sceneId}`);
+    const route = `/scene/${sceneId}/characters`;
+    const res = await agent
+      .get(route)
 
-        .set("Accept", "application/json");
+      .set("Accept", "application/json");
 
-      expect(res.status).toEqual(400);
-      expect(res.body.timestamp).toBeDefined();
-      expect(res.body.message).toEqual(
-        "Action has failed due to some validation errors"
-      );
-      expect(res.body.details).toBeDefined();
-      expect(res.body.details.length).toEqual(1);
+    expect(res.status).toEqual(400);
+    expect(res.body.timestamp).toBeDefined();
+    expect(res.body.message).toEqual(
+      "Action has failed due to some validation errors"
+    );
+    expect(res.body.details).toBeDefined();
+    expect(res.body.details.length).toEqual(1);
 
-      const resDetails = {
-        type: "field",
-        value: 0,
-        msg: "This scene id is invalid.",
-        path: "id",
-        location: "params",
-      };
-      expect(res.body.details[0]).toMatchObject(resDetails);
-    });
-  
+    const resDetails = {
+      type: "field",
+      value: 0,
+      msg: "This scene id is invalid.",
+      path: "id",
+      location: "params",
+    };
+    expect(res.body.details[0]).toMatchObject(resDetails);
+  });
+
   /** this route gets the character names that belong to a specific scene */
   test("GET /scene/:id/characters happy path", async () => {
     const scene = await agent
@@ -141,10 +143,34 @@ describe("initial game setup", () => {
       expect(res.status).toEqual(200);
       expect(res.body.characters).toBeDefined();
       expect(res.body).toEqual({
-        message: 'success',
-        characters: expect.arrayContaining(['Odlaw', 'Waldo', 'Wizard Whitebeard'])
-      })
-  
+        message: "success",
+        characters: expect.arrayContaining([
+          "Odlaw",
+          "Waldo",
+          "Wizard Whitebeard",
+        ]),
+      });
     }
+  });
+
+  test.only("GET /game", async () => {
+    const res = await agent
+
+      .get("/game")
+
+      .set("Accept", "application/json");
+
+    expect(res.status).toEqual(200);
+    expect(res.body).toEqual({
+      message: "success",
+      id: expect.toBeTypeOf("number"),
+      url: expect.toMatch(/^https:\/\/.*\.jpg/),
+      characters: expect.arrayContaining([
+        "Odlaw",
+        "Waldo",
+        "Wizard Whitebeard",
+      ]),
+    });
+    console.log(res.body)
   });
 });

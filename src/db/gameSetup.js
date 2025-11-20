@@ -47,3 +47,53 @@ export async function getSceneCharacters(id) {
     console.error("id is missing")
   }
 }
+
+export async function addGame(scene_id) {
+  console.log("in addGame: ", scene_id);
+  const game = await prisma.game.create({
+    data: {
+      username: "anonymous",
+      start_time: new Date().toISOString(),
+      scene_id: Number(scene_id)
+    },
+  });
+  return game;
+}
+
+export async function updateSessionData(sid, sData) {
+  console.log("in updateSessionData: ", sid, sData);
+  const session = await prisma.session.update({
+    where: {
+      sid,
+    },
+    data: {
+      data: sData
+    }
+  })
+  return session;
+}
+
+export async function getSession(sid) {
+  console.log("in getSession: ", sid);
+  const session = await prisma.session.findFirst({
+    where: {
+      sid
+    }
+  })
+  console.log(session)
+  return session;
+}
+
+export async function getGame(id) {
+  console.log("in getGame: ", id);
+  const game = await prisma.game.findUnique({
+    where: {
+      id: Number(id)
+    },
+    include: {
+      scene: true,
+      answers: true
+    }
+  })
+  return game;
+}
