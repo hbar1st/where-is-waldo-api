@@ -84,6 +84,13 @@ export async function getSession(sid) {
   return session;
 }
 
+export async function getAllSessions() {
+  console.log("in getAllSessions");
+  const sessions = await prisma.session.findMany();
+  console.log(sessions);
+  return sessions;
+}
+
 export async function getGame(id) {
   console.log("in getGame: ", id);
   const game = await prisma.game.findUnique({

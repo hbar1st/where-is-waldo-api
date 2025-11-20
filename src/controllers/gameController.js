@@ -17,34 +17,30 @@ import { matchedData } from "express-validator";
  *
  * @param {*} sid the session id retrieved from the cookie
  */
-export async function setupGame(sid) {
+export async function setupGame(req,res,next) {
+  const sid = req.session.id;
   console.log("in setupGame: ", sid)
-  // insert a new game into the game table and update the session with the new game id
-  try {
-    const scene = await dbGetScene();
-    if (scene) {
-      const game = await addGame(scene.id);
-      if (game) {
-        console.log("game.id: ", game.id);
-        const sData = await getSessionData(sid);
-        if (sData) {
-          sData.cookie.gameId = game.id;
-          const stringifiedData = await JSON.stringify(sData);
-          const updatedSession = await updateSessionData(sid, stringifiedData);
-          console.log("the updated session: ", updatedSession)
+  if (!req.session.gameId) {
+    // insert a new game into the game table and update the session with the new game id
+    try {
+      const scene = await dbGetScene(); //gets the first and only scene for now
+      if (scene) {
+        const game = await addGame(scene.id);
+        if (game) {
+          console.log("game.id: ", game.id);
+          req.session.gameId = game.id;
         } else {
-          throw new AppError("Failed to update the session data")
+          throw new AppError("Failed to setup a new game");
         }
       } else {
-        throw new AppError("Failed to setup a new game");
+        throw new AppError("Failed to get a scene to setup the game with");
       }
-    } else {
-      throw new AppError("Failed to get a scene to setup the game with");
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-  } catch (error) {
-    console.error(error);
-    throw error;
   }
+  next();
 }
 
 export async function getGameID(sid) {
@@ -123,13 +119,13 @@ export async function getGame(req, res) {
   const sid = req.session.id;
   try {
     // extract the game_id from the session row
-    const gameId = await getGameID(sid);
+    let gameId = req.session.gameId;
     if (gameId) {
       console.log("found a game id: ", gameId)
       const game = await dbGetGame(gameId);
       return res.status(200).json({message: "success", game});
     } else {
-      throw new AppError("Couldn't retrieve the game id")
+      throw new AppError(`failed to get a game id from the current session: ${req.session.id}`)
     }
   } catch (error) {
     console.error(error);
