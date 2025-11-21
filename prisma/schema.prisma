@@ -24,13 +24,13 @@ model Session {
 }
 
 model Game {
-  id         Int           @id @default(autoincrement())
-  username   String        @default("anonymous")
-  start_time DateTime      @default(now())
-  end_time   DateTime?
-  scene      Scene         @relation(fields: [scene_id], references: [id], onDelete: Cascade)
-  scene_id   Int
-  answers    Game_Answer[]
+  id            Int           @id @default(autoincrement())
+  username      String        @default("anonymous")
+  start_time    DateTime      @default(now())
+  end_time      DateTime?
+  scene         Scene         @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  scene_id      Int
+  answers       Game_Answer[]
 
   @@map(name: "game")
 }

@@ -5,7 +5,7 @@
 # Source the .env file
 source ./.env
 
-echo "** setup the main db at $DATABASE_URL"
+echo "** setup the main db at $DATABASE_URL for $DB_USER"
 
 npx prisma db push
 
@@ -13,15 +13,15 @@ npx prisma migrate dev
 
 npx prisma generate
 
-echo "** setup the test db at $TEST_DATABASE_URL"
+echo "** setup the test db at $TEST_DATABASE_URL for $DB_USER"
 
 
-NOED_ENV=test npx prisma db push && npm run "db:reset"
+NODE_ENV=test npx prisma db push && npm run "db:reset"
 
 seed_db() { 
   echo -e "\nWorking on clearing/migrating/seeding table: $1\n"
 
-  PSQL="psql --username=hbar1st --dbname=$1 -t -q --no-align -c"
+  PSQL="psql --username=$DB_USER --dbname=$1 -t -q --no-align -c"
 
   echo "Clear all the rows"
   $PSQL "truncate table answer,character_name,scene,game,game_answer"

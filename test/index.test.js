@@ -161,16 +161,25 @@ describe("initial game setup", () => {
       .set("Accept", "application/json");
 
     expect(res.status).toEqual(200);
-    expect(res.body).toEqual({
-      message: "success",
-      id: expect.toBeTypeOf("number"),
-      url: expect.toMatch(/^https:\/\/.*\.jpg/),
+    expect(res.body.message).toEqual("success");
+    expect(res.body.game).toBeTypeOf("object");
+    expect(res.body.game).toHaveProperty("id");
+    expect(res.body.game).toHaveProperty("username", "anonymous");
+    expect(res.body.game).toHaveProperty("start_time");
+    expect(res.body.game.start_time).toBeTypeOf("number")
+    expect(res.body.game).toHaveProperty("end_time", null)
+    expect(res.body.game).toHaveProperty("scene");
+    expect(res.body.game.scene).toHaveProperty("characters");
+    expect(res.body.game.scene).toEqual({
+      id: expect.toSatisfy((input) => Number.isInteger(input)),
+      url: expect.stringMatching(/^https:\/\/.*\.jpg/),
       characters: expect.arrayContaining([
         "Odlaw",
         "Waldo",
         "Wizard Whitebeard",
       ]),
     });
-    console.log(res.body)
+
   });
 });
+

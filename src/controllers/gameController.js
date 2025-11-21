@@ -5,13 +5,12 @@ import {
   getGame as dbGetGame,
   getSceneCharacters,
   addGame,
-  updateSessionData,
 } from "../db/gameSetup.js";
 import { matchedData } from "express-validator";
 
 /**
- * this method is called only if the session doesn't have a gameId value already
- * it sets up the game with the first scene, usernme of 'anonymous' and the start time is set in epoch time
+ * this method is sets up a new game only if the session doesn't have a gameId value already
+ * it sets up the game with the first scene, username of 'anonymous' and the start time is set in epoch time //TODO need to fix that
  *
  * Later on, the game row will be updated whenever the user finds new characters and completes the game (end time will be recorded plus name if given)
  *
@@ -123,6 +122,19 @@ export async function getGame(req, res) {
     if (gameId) {
       console.log("found a game id: ", gameId)
       const game = await dbGetGame(gameId);
+
+      // do a little data massaging
+      // - turn the start time stamp into an epoch timestamp
+      // - reorganize the return values so the db schema is not obvious and for the client's convenience
+      console.log("start_time from the db: ", game.start_time)
+      game.start_time = (new Date(game.start_time)).valueOf();
+      console.log("start_time as epoch value: ", game.start_time)
+
+      game.scene.characters = game.scene.answers.reduce((acc, el) => {
+        acc.push(el["character_name"].name);
+        return acc;
+      }, []);
+      delete game.scene.answers;
       return res.status(200).json({message: "success", game});
     } else {
       throw new AppError(`failed to get a game id from the current session: ${req.session.id}`)

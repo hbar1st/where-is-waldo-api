@@ -39,7 +39,6 @@ export async function getSceneCharacters(id) {
               name: true
             }
           }
-        
       }
     })
     return characters;
@@ -58,19 +57,6 @@ export async function addGame(scene_id) {
     },
   });
   return game;
-}
-
-export async function updateSessionData(sid, sData) {
-  console.log("in updateSessionData: ", sid, sData);
-  const session = await prisma.session.update({
-    where: {
-      sid,
-    },
-    data: {
-      data: sData
-    }
-  })
-  return session;
 }
 
 export async function getSession(sid) {
@@ -95,12 +81,24 @@ export async function getGame(id) {
   console.log("in getGame: ", id);
   const game = await prisma.game.findUnique({
     where: {
-      id: Number(id)
+      id: Number(id),
     },
     include: {
-      scene: true,
-      answers: true
-    }
-  })
+      scene: {
+        include: {
+          answers: {
+            select: {
+              character_name: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      answers: true,
+    },
+  });
   return game;
 }
