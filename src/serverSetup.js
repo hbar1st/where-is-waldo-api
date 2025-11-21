@@ -34,7 +34,7 @@ app.use(
   })
 );
 
-app.use((req, res, next) => { console.log(req.headers); next() })
+app.use((req, res, next) => { console.log(req.params); next() })
 app.use(
   expressSession({
     cookie: {
@@ -80,18 +80,14 @@ app.use((err, req, res, next) => {
     console.log("================================================");
     console.error("in the catch-all: ", timestamp, err, err.stack);
 
-    console.log("constructor of the error is called: ", err.constructor.name); //constructor of the error is called:  ValidationError
-
     console.log(Object.getPrototypeOf(err)); // [AppError]
 
     console.log(err instanceof AppError); //false
 
-    console.log("err instanceof AppError:", err instanceof AppError);
     console.log(err.name);
 
     if (err instanceof AppError || err.name === "AppError") {
       {
-        console.log("found an instance of AppError");
         res.status(err.statusCode);
         if (err instanceof ValidationError) {
           res.json({

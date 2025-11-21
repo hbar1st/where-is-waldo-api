@@ -1,6 +1,17 @@
 import express from "express";
-import { getScene, getCharacters, getGame, setupGame, getSessionData, getGameID } from "../controllers/gameController.js"
-import { checkSceneId } from "../validators/gameValidator.js"
+import {
+  getScene, getCharacters,
+  getGame, setupGame, getSessionData,
+  getGameID,
+  evaluateAnswer,
+} from "../controllers/gameController.js"
+
+import {
+  checkSceneId,
+  checkGameId,
+  checkCoordinates,
+  checkCharacter,
+} from "../validators/gameValidator.js";
 import { handleExpressValidationErrors } from "./routerUtil.js";
 import { AppError } from "../errors/AppError.js";
 import { getAllSessions } from "../db/gameSetup.js"
@@ -28,4 +39,13 @@ indexRouter.get(
   "/game",
   setupGame,
   getGame
+);
+
+indexRouter.put(
+  "/game/answer",
+  checkGameId,
+  //checkCoordinates,
+  checkCharacter,
+  handleExpressValidationErrors,
+  evaluateAnswer
 );

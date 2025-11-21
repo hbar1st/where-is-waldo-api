@@ -3,7 +3,7 @@
 ## Learning and/or practice goals of this practice project:
 - use a TDD approach to develop the code
 - separate the backend from the front-end
-- maintain anonymous user sessions with cookies and passport.js
+- maintain anonymous user sessions with cookies
 - use prisma for CRUD actions against a postgresql db
 
 
@@ -24,5 +24,5 @@ This is the main route that a client app would use to start a game as this route
 
 GET /scene/:id/topten      returns the top ten players and their game times for the scene being played
 
-PUT /game/:id/answer
-PUT /game/:id/username
+PUT /game/:id/answer?x=X&y=Y       (x is from the left, and y is from the top. The origin is top left.)
+PUT /game/:id/username?name=NAME

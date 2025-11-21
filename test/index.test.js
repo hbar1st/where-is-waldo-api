@@ -1,7 +1,6 @@
 import { app } from "../src/serverSetup";
 import { expect, test, describe, beforeEach, afterEach } from "vitest";
 import request from "supertest";
-import superagent from "superagent";
 
 test("GET invalid route -> 404", async () => {
   const route = "/bad-route";
@@ -153,7 +152,7 @@ describe("initial game setup", () => {
     }
   });
 
-  test.only("GET /game", async () => {
+  test("GET /game", async () => {
     const res = await agent
 
       .get("/game")
@@ -166,8 +165,8 @@ describe("initial game setup", () => {
     expect(res.body.game).toHaveProperty("id");
     expect(res.body.game).toHaveProperty("username", "anonymous");
     expect(res.body.game).toHaveProperty("start_time");
-    expect(res.body.game.start_time).toBeTypeOf("number")
-    expect(res.body.game).toHaveProperty("end_time", null)
+    expect(res.body.game.start_time).toBeTypeOf("number");
+    expect(res.body.game).toHaveProperty("end_time", null);
     expect(res.body.game).toHaveProperty("scene");
     expect(res.body.game.scene).toHaveProperty("characters");
     expect(res.body.game.scene).toEqual({
@@ -179,7 +178,33 @@ describe("initial game setup", () => {
         "Wizard Whitebeard",
       ]),
     });
+  });
 
+  test.only("PUT /game/answer?x=0&y=0 missing character", async () => {
+    const gameRes = await agent.get(`/game`).set("Accept", "application/json");
+    const gameId = gameRes.body.game.id;
+
+    const res = await agent
+      .put(`/game/answer`)
+
+      .query({ x: 0 })
+      .query({ y: 0 })
+
+      .set("Accept", "application/json");
+
+    expect(res.body).toMatchObject({
+      statusCode: 400,
+      message: "Action has failed due to some validation errors",
+      timestamp: expect.stringContaining("GMT"),
+      details: expect.arrayContaining([
+        {
+          type: "field",
+          value: "",
+          msg: "A character is required to complete the request",
+          path: "character",
+          location: "query",
+        },
+      ]),
+    });
   });
 });
-
