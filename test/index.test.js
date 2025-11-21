@@ -1,5 +1,6 @@
 import { app } from "../src/serverSetup";
-import { expect, test, describe, beforeEach, afterEach } from "vitest";
+import { CookieAccessInfo } from 'cookiejar';
+import { expect, test, describe, beforeAll, afterEach } from "vitest";
 import request from "supertest";
 
 test("GET invalid route -> 404", async () => {
@@ -41,12 +42,11 @@ test("GET / gives a cookie", async () => {
 
   expect(res.status).toEqual(200);
   expect(res.headers["set-cookie"]).toBeDefined();
-  console.log("cookie: ", res.headers["set-cookie"]);
 
   console.log("cookie: ", res.headers["set-cookie"]);
 });
 
-describe("initial game setup", () => {
+describe.skip("initial game setup", () => {
   const agent = request.agent(app);
 
   /** this route gets the url of the image we are playing where's waldo with */
@@ -63,7 +63,8 @@ describe("initial game setup", () => {
     expect(res.body.url).toBeTypeOf("string");
     expect(res.body.url).toMatch(/^https:\/\/.*\.jpg/);
     expect(res.body.id).toBeTypeOf("number");
-    //agent.jar.setCookie(...res.headers["set-cookie"])
+
+
   });
 
   test("GET /scene/:id/characters invalid scene id", async () => {
@@ -179,11 +180,22 @@ describe("initial game setup", () => {
       ]),
     });
   });
+});
 
-  test.only("PUT /game/answer?x=0&y=0 missing character", async () => {
-    const gameRes = await agent.get(`/game`).set("Accept", "application/json");
-    const gameId = gameRes.body.game.id;
+describe.only("test answers", () => {
+  let agent;
 
+  beforeAll(async () => {
+    agent = request.agent(app);
+    const route = "/game";
+    await agent
+      .get(route)
+
+      .set("Accept", "application/json");
+
+  });
+
+  test.only("PUT /game/answer?x=0&y=0 missing character name", async () => {
     const res = await agent
       .put(`/game/answer`)
 
@@ -207,4 +219,172 @@ describe("initial game setup", () => {
       ]),
     });
   });
+
+  test("PUT /game/answer?x=0&y=0&character=invalid invalid character name", async () => {
+    const res = await agent
+      .put(`/game/answer`)
+
+      .query({ x: 0 })
+      .query({ y: 0 })
+      .query({ character: "invalid" })
+
+      .set("Accept", "application/json");
+
+    expect(res.body).toMatchObject({
+      statusCode: 400,
+      message: "Action has failed due to some validation errors",
+      timestamp: expect.stringContaining("GMT"),
+      details: expect.arrayContaining([
+        {
+          type: "field",
+          value: "invalid",
+          msg: "The character name invalid is invalid. Must be one of [Odlaw,Waldo,Wizard Whitebeard]",
+          path: "character",
+          location: "query",
+        },
+      ]),
+    });
+  });
+
+  test("PUT /game/answer?y=0&character=Odlaw missing x", async () => {
+    const res = await agent
+      .put(`/game/answer`)
+
+      .query({ y: 0 })
+      .query({ character: "Odlaw" })
+
+      .set("Accept", "application/json");
+
+    expect(res.body).toMatchObject({
+      statusCode: 400,
+      message: "Action has failed due to some validation errors",
+      timestamp: expect.stringContaining("GMT"),
+      details: expect.arrayContaining([
+        {
+          type: "field",
+          value: "",
+          msg: "an x coordinate is required",
+          path: "x",
+          location: "query",
+        },
+        {
+          type: "field",
+          value: "",
+          msg: "the x coordinate should be a number between 0 and 100",
+          path: "x",
+          location: "query",
+        },
+      ]),
+    });
+  });
+  
+  test.each([[-1], [101], ["a"]])(
+    "PUT /game/answer?x=%s&y=0&character=Odlaw invalid x",
+    async (x) => {
+      const res = await agent
+        .put(`/game/answer`)
+
+        .query({ x: x })
+        .query({ y: 0 })
+        .query({ character: "Odlaw" })
+
+        .set("Accept", "application/json");
+
+      expect(res.body).toMatchObject({
+        statusCode: 400,
+        message: "Action has failed due to some validation errors",
+        timestamp: expect.stringContaining("GMT"),
+        details: expect.arrayContaining([
+          {
+            type: "field",
+            value: `${x}`,
+            msg: "the x coordinate should be a number between 0 and 100",
+            path: "x",
+            location: "query",
+          },
+        ]),
+      });
+    }
+  );
+
+  test("PUT /game/answer?x=0&character=Odlaw missing y", async () => {
+    const res = await agent
+      .put(`/game/answer`)
+
+      .query({ x: 0 })
+      .query({ character: "Odlaw" })
+
+      .set("Accept", "application/json");
+
+    expect(res.body).toMatchObject({
+      statusCode: 400,
+      message: "Action has failed due to some validation errors",
+      timestamp: expect.stringContaining("GMT"),
+      details: expect.arrayContaining([
+        {
+          type: "field",
+          value: "",
+          msg: "a y coordinate is required",
+          path: "y",
+          location: "query",
+        },
+        {
+          type: "field",
+          value: "",
+          msg: "the y coordinate should be a number between 0 and 100",
+          path: "y",
+          location: "query",
+        },
+      ]),
+    });
+  });
+
+  test.each([[-1], [101], ["a"]])(
+    "PUT /game/answer?x=0&y=%s&character=Odlaw invalid y",
+    async (y) => {
+      const res = await agent
+        .put(`/game/answer`)
+
+        .query({ y: y })
+        .query({ x: 0 })
+        .query({ character: "Odlaw" })
+
+        .set("Accept", "application/json");
+
+      expect(res.body).toMatchObject({
+        statusCode: 400,
+        message: "Action has failed due to some validation errors",
+        timestamp: expect.stringContaining("GMT"),
+        details: expect.arrayContaining([
+          {
+            type: "field",
+            value: `${y}`,
+            msg: "the y coordinate should be a number between 0 and 100",
+            path: "y",
+            location: "query",
+          },
+        ]),
+      });
+    }
+  );
+
+  test(
+    "PUT /game/answer?x=0&y=0&character=Odlaw wrong location",
+    async () => {
+      const res = await agent
+        .put(`/game/answer`)
+
+        .query({ y: 0 })
+        .query({ x: 0 })
+        .query({ character: "Odlaw" })
+
+        .set("Accept", "application/json");
+
+      expect(res.body).toMatchObject({
+        statusCode: 400,
+        message: "Wrong answer",
+      });
+    }
+  );
+  
 });

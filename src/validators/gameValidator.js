@@ -1,6 +1,7 @@
 import { param, query } from "express-validator";
-import { getSceneById } from "../db/gameSetup.js";
+import { getSceneById, getGameScene, getGame, getCharacterKey } from "../db/gameSetup.js";
 import { AppError } from "../errors/AppError.js";
+import { ValidationError } from "../errors/ValidationError.js";
 
 export const checkSceneId = [
   param("id")
@@ -18,7 +19,7 @@ export const checkSceneId = [
 
         console.log("scene row found: ", sceneRow);
         if (!sceneRow) {
-          throw new Error("This scene id is invalid.");
+          throw new ValidationError("This scene id is invalid.", []);
         } else {
           return true;
         }
@@ -26,8 +27,31 @@ export const checkSceneId = [
         console.error(error);
         throw error;
       }
+    }),
+];
+
+export const checkCoordinates = [
+  query("x")
+    .trim()
+    .notEmpty()
+    .withMessage("an x coordinate is required")
+    .isFloat({
+      min: 0,
+      max: 100,
     })
-  ]
+    .withMessage("the x coordinate should be a number between 0 and 100")
+    .toFloat(),
+  query("y")
+    .trim()
+    .notEmpty()
+    .withMessage("a y coordinate is required")
+    .isFloat({
+      min: 0,
+      max: 100,
+    })
+    .withMessage("the y coordinate should be a number between 0 and 100")
+    .toFloat(),
+];
 
 export const checkCharacter = [
   query("character")
@@ -35,16 +59,46 @@ export const checkCharacter = [
     .notEmpty()
     .withMessage("A character is required to complete the request")
     .bail()
-    .custom(async (value) => {
-    console.log("try to validate the character name exists for the scene")
+    .custom(async (value, { req }) => {
+      console.log("try to validate the character name exists for the scene");
+      const game = await getGame(req.session.gameId);
+      if (game) {
+        console.log("game is: ", game);
+        const characters = [];
+        const validCharacter = game.scene.answers.reduce((acc, el, i) => {
+          characters.push(el["character_name"].name);
+          acc = acc || el["character_name"].name === value;
+          return acc;
+        }, false);
+        if (!validCharacter) {
+          throw new ValidationError(
+            `The character name ${value} is invalid. Must be one of [${characters}]`
+          );
+        }
+      } else {
+        throw new ValidationError("Failed to find the game's details", []);
+      }
+    })
+    .bail()
+    .customSanitizer(async (value) => {
+      try {
+        const characterKey = getCharacterKey(value)
+        return characterKey;
+      } catch (error) {
+        console.error(error);
+        throw new AppError(
+          "Failed to map the character name to its key"
+        )
+      }
+      
   })
-]
+];
 
-export const checkGameId = (req, res, next) => {
+export const checkSessionGameId = (req, res, next) => {
   const gameId = req.session.gameId;
   if (gameId) {
     next();
   } else {
-    throw new AppError("Failed to find the gameId in the session")
+    throw new ValidationError("Failed to find the gameId in the session");
   }
-}
+};

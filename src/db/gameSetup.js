@@ -102,3 +102,29 @@ export async function getGame(id) {
   });
   return game;
 }
+
+export async function getGameScene(id) {
+  console.log("in getGameScene: ", id)
+  const gameId = await prisma.game.findFirst({
+    where: {
+      id: Number(id)
+    },
+    select: {
+      scene_id: true
+    }
+  })
+  return gameId;
+}
+
+export async function getCharacterKey(name) {
+  console.log("in getCharacterKey: ", name)
+  const characterRow = await prisma.characterName.findFirst({
+    where: {
+      name
+    },
+    select: {
+      character: true
+    }
+  })
+  return characterRow;
+}

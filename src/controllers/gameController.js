@@ -146,5 +146,10 @@ export async function getGame(req, res) {
 }
 
 export async function evaluateAnswer(req, res) {
+  console.log("in evaluateAnswer: ", req.query)
+  const x = req.query.x;
+  const y = req.query.y;
+  const characterName = req.query.character;
+
   res.status(200).json({message: "success"})
 }

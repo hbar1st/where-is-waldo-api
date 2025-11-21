@@ -8,7 +8,7 @@ import {
 
 import {
   checkSceneId,
-  checkGameId,
+  checkSessionGameId,
   checkCoordinates,
   checkCharacter,
 } from "../validators/gameValidator.js";
@@ -43,8 +43,8 @@ indexRouter.get(
 
 indexRouter.put(
   "/game/answer",
-  checkGameId,
-  //checkCoordinates,
+  checkSessionGameId,
+  checkCoordinates,
   checkCharacter,
   handleExpressValidationErrors,
   evaluateAnswer
