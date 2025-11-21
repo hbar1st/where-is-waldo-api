@@ -5,6 +5,9 @@ import {
   getGame as dbGetGame,
   getSceneCharacters,
   addGame,
+  getGameScene,
+  getCharacterKey,
+  getAnswer,
 } from "../db/gameSetup.js";
 import { matchedData } from "express-validator";
 
@@ -151,5 +154,31 @@ export async function evaluateAnswer(req, res) {
   const y = req.query.y;
   const characterName = req.query.character;
 
-  res.status(200).json({message: "success"})
+  const sid = req.session.id;
+  const gameId = req.session.gameId;
+
+  try {
+    const sceneId = await getGameScene(gameId);
+    const characterKey = await getCharacterKey(characterName);
+    const answerRow = await getAnswer(sceneId.scene_id, characterKey.character)
+    if (answerRow) {
+      if (inRange(answerRow.location_x, x) && inRange(answerRow.location_y, y)) {
+        res.status(200).json({ message: "Correct answer", x, y, character: characterName });
+      } else {
+        res.status(400).json({ message: "Wrong answer", x, y, character: characterName })
+      }
+    } else {
+      res.status(400).json({ message: "Wrong answer", x, y, character: characterName });
+    }
+  } catch (error) {
+    console.error(error);
+    throw (error)
+  }
+}
+
+function inRange(correctAnswer, userAnswer) {
+  console.log("in inRange: ", correctAnswer, userAnswer);
+  const diff = (Math.abs(correctAnswer - userAnswer)).toFixed(2);
+  console.log("the diff is: ", diff)
+  return diff <= 0.01;
 }

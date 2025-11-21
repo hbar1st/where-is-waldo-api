@@ -1,5 +1,10 @@
 import { param, query } from "express-validator";
-import { getSceneById, getGameScene, getGame, getCharacterKey } from "../db/gameSetup.js";
+import {
+  getSceneById,
+  getGameScene,
+  getGame,
+  getCharacterKey,
+} from "../db/gameSetup.js";
 import { AppError } from "../errors/AppError.js";
 import { ValidationError } from "../errors/ValidationError.js";
 
@@ -82,16 +87,13 @@ export const checkCharacter = [
     .bail()
     .customSanitizer(async (value) => {
       try {
-        const characterKey = getCharacterKey(value)
+        const characterKey = await getCharacterKey(value);
         return characterKey;
       } catch (error) {
         console.error(error);
-        throw new AppError(
-          "Failed to map the character name to its key"
-        )
+        throw new AppError("Failed to map the character name to its key");
       }
-      
-  })
+    }),
 ];
 
 export const checkSessionGameId = (req, res, next) => {

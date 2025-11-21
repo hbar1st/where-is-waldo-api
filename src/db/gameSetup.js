@@ -128,3 +128,18 @@ export async function getCharacterKey(name) {
   })
   return characterRow;
 }
+
+export async function getAnswer(sceneId, characterKey) {
+  console.log("in getAnswer: ", sceneId, characterKey);
+  const answerRow = await prisma.answer.findFirst({
+    where: {
+      scene_id: Number(sceneId),
+      character: characterKey
+    },
+    select: {
+      location_x: true,
+      location_y: true
+    }
+  })
+  return answerRow;
+}

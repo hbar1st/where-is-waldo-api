@@ -1,5 +1,5 @@
 import { app } from "../src/serverSetup";
-import { CookieAccessInfo } from 'cookiejar';
+import { CookieAccessInfo } from "cookiejar";
 import { expect, test, describe, beforeAll, afterEach } from "vitest";
 import request from "supertest";
 
@@ -63,8 +63,6 @@ describe.skip("initial game setup", () => {
     expect(res.body.url).toBeTypeOf("string");
     expect(res.body.url).toMatch(/^https:\/\/.*\.jpg/);
     expect(res.body.id).toBeTypeOf("number");
-
-
   });
 
   test("GET /scene/:id/characters invalid scene id", async () => {
@@ -182,7 +180,7 @@ describe.skip("initial game setup", () => {
   });
 });
 
-describe.only("test answers", () => {
+describe("test answers", () => {
   let agent;
 
   beforeAll(async () => {
@@ -192,10 +190,9 @@ describe.only("test answers", () => {
       .get(route)
 
       .set("Accept", "application/json");
-
   });
 
-  test.only("PUT /game/answer?x=0&y=0 missing character name", async () => {
+  test("PUT /game/answer?x=0&y=0 missing character name", async () => {
     const res = await agent
       .put(`/game/answer`)
 
@@ -277,7 +274,7 @@ describe.only("test answers", () => {
       ]),
     });
   });
-  
+
   test.each([[-1], [101], ["a"]])(
     "PUT /game/answer?x=%s&y=0&character=Odlaw invalid x",
     async (x) => {
@@ -368,23 +365,69 @@ describe.only("test answers", () => {
     }
   );
 
-  test(
-    "PUT /game/answer?x=0&y=0&character=Odlaw wrong location",
-    async () => {
+  test("PUT /game/answer?x=0&y=0&character=Odlaw wrong location", async () => {
+    const res = await agent
+      .put(`/game/answer`)
+
+      .query({ y: 0 })
+      .query({ x: 0 })
+      .query({ character: "Odlaw" })
+
+      .set("Accept", "application/json");
+
+    console.log(res.body);
+    expect(res.status).toEqual(400);
+    expect(res.body).toMatchObject({
+      message: "Wrong answer",
+      x: "0",
+      y: "0",
+      character: "Odlaw",
+    });
+  });
+
+  test("PUT /game/answer?x=0.07&y=24.82&character=Waldo wrong character", async () => {
+    const res = await agent
+      .put(`/game/answer`)
+
+      .query({ x: 0.07 })
+      .query({ y: 24.82 })
+      .query({ character: "Waldo" })
+
+      .set("Accept", "application/json");
+
+    console.log(res.body);
+    expect(res.status).toEqual(400);
+    expect(res.body).toMatchObject({
+      message: "Wrong answer",
+      x: "0.07",
+      y: "24.82",
+      character: "Waldo",
+    });
+  });
+
+  test.each([
+    { x: 0.07, y: 24.82 },
+    { x: 0.06, y: 24.83 },
+  ])(
+    "PUT /game/answer?x=$x&y=$y&character=Odlaw correct answer",
+    async ({ x, y }) => {
       const res = await agent
         .put(`/game/answer`)
 
-        .query({ y: 0 })
-        .query({ x: 0 })
+        .query({ x: x })
+        .query({ y: y })
         .query({ character: "Odlaw" })
 
         .set("Accept", "application/json");
 
+      console.log(res.body);
+      expect(res.status).toEqual(200);
       expect(res.body).toMatchObject({
-        statusCode: 400,
-        message: "Wrong answer",
+        message: "Correct answer",
+        x: `${x}`,
+        y: `${y}`,
+        character: "Odlaw",
       });
     }
   );
-  
 });
