@@ -1,15 +1,21 @@
 import { AppError } from "../errors/AppError.js";
-import {
-  getScene as dbGetScene,
+import { matchedData } from "express-validator";
+import * as gameSetup from "../db/gameSetup.js";
+const {
+  getScene: dbGetScene,
   getSession,
-  getGame as dbGetGame,
+  getGame: dbGetGame,
   getSceneCharacters,
   addGame,
   getGameScene,
   getCharacterKey,
   getAnswer,
-} from "../db/gameSetup.js";
-import { matchedData } from "express-validator";
+  getSceneAnswerCount,
+  setGameAnswer,
+  getGameAnswerCount,
+  endGame,
+  inTopTen,
+} = gameSetup;
 
 /**
  * this method is sets up a new game only if the session doesn't have a gameId value already
@@ -67,7 +73,7 @@ export async function getSessionData(sid) {
     if (session) {
       console.log("retrieved the session: ", session);
       sData = await JSON.parse(session.data);
-      console.log(sData);
+      console.log("session data: ", sData);
     }
     return sData;
   } catch (error) {
@@ -163,7 +169,42 @@ export async function evaluateAnswer(req, res) {
     const answerRow = await getAnswer(sceneId.scene_id, characterKey.character)
     if (answerRow) {
       if (inRange(answerRow.location_x, x) && inRange(answerRow.location_y, y)) {
-        res.status(200).json({ message: "Correct answer", x, y, character: characterName });
+        // log the answer in the game_answer table and get the count of all answers found
+        const gameAnswer = await setGameAnswer(gameId, characterKey.character, x, y)
+        let [gameAnswerCount, expectedAnswerCount] =
+          await Promise.all([
+            getGameAnswerCount(gameId),
+            getSceneAnswerCount(sceneId.scene_id)
+          ]);
+        console.log(gameAnswerCount, expectedAnswerCount)
+        const resultObj = {
+          message: "Correct answer",
+          x,
+          y,
+          character: characterName,
+        };
+        // if all answers found, then record the current end_time in the game table
+        if (gameAnswerCount.count === expectedAnswerCount.count) {
+          // record the end time in the game table
+          const game = await endGame(gameId);
+          console.log("final updated game: ", game);
+          // calculate the elapsed time
+          const end_time = calculateElapsedTime(game.start_time, game.end_time);
+          console.log("elapsed time: ", end_time);
+
+          // send back the elapsed time as the end_time value
+          resultObj["end_time"] = end_time;
+
+          // find the top ten and see if the current game is in the top?
+          const topTen = await inTopTen(gameId);
+          if (topTen.length > 0) {
+            // send back the key topten: true if the score is in the highest ten scores
+            resultObj.inTopTen = true
+          } else {
+            resultObj.inTopTen = false
+          }
+        }
+        res.status(200).json(resultObj);
       } else {
         res.status(400).json({ message: "Wrong answer", x, y, character: characterName })
       }
@@ -174,6 +215,11 @@ export async function evaluateAnswer(req, res) {
     console.error(error);
     throw (error)
   }
+}
+
+export function calculateElapsedTime(startTime, endTime) {
+  console.log("calculateElpasedTime: ", startTime, endTime);  
+  return new Date(endTime).valueOf() - new Date(startTime).valueOf();
 }
 
 function inRange(correctAnswer, userAnswer) {
