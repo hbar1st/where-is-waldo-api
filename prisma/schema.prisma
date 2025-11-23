@@ -24,23 +24,25 @@ model Session {
 }
 
 model Game {
-  id            Int           @id @default(autoincrement())
-  username      String        @default("anonymous")
-  start_time    DateTime      @default(now())
-  end_time      DateTime?
-  scene         Scene         @relation(fields: [scene_id], references: [id], onDelete: Cascade)
-  scene_id      Int
-  answers       Game_Answer[]
+  id          Int           @id @default(autoincrement())
+  username    String        @default("anonymous")
+  start_time  DateTime      @default(now())
+  end_time    DateTime?
+  scene       Scene         @relation(fields: [scene_id], references: [id], onDelete: Cascade)
+  scene_id    Int
+  gameAnswers Game_Answer[]
 
   @@map(name: "game")
 }
 
 model Game_Answer {
-  game       Game      @relation(fields: [game_id], references: [id], onDelete: Cascade)
-  game_id    Int
-  character  Character
-  location_x Float
-  location_y Float
+  game           Game          @relation(fields: [game_id], references: [id], onDelete: Cascade)
+  game_id        Int
+  location_x     Float
+  location_y     Float
+
+  character_name CharacterName @relation(fields: [character], references: [character], onDelete: Cascade)
+  character      Character
 
   @@unique([game_id, character])
   @@map(name: "game_answer")
@@ -68,9 +70,10 @@ model Answer {
 }
 
 model CharacterName {
-  character Character @unique
-  name      String
-  answers   Answer[]
+  character   Character     @unique
+  name        String
+  answers     Answer[]
+  gameAnswers Game_Answer[]
 
   @@map(name: "character_name")
 }

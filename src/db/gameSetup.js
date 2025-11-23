@@ -64,7 +64,7 @@ WHERE id = ${gameId};`
 
 export async function endGame(game_id) {
   console.log("in endGame: ", game_id);
-  const game = await prisma.game.update({
+  let game = await prisma.game.update({
     where: {
       id: Number(game_id),
     },
@@ -72,6 +72,7 @@ export async function endGame(game_id) {
       end_time: new Date().toISOString(),
     },
   });
+  
   return game;
 }
 
@@ -131,7 +132,17 @@ export async function getGame(id) {
           },
         },
       },
-      answers: true,
+      gameAnswers: {
+        select: {
+          location_x: true,
+          location_y: true,
+          character_name: {
+            select: {
+              name: true
+            }
+          }
+        }
+      },
     },
   });
   return game;

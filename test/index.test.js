@@ -1,7 +1,15 @@
 import { app } from "../src/serverSetup";
 import { prisma } from "../src/middleware/prisma.mjs";
 
-import { expect, test, describe, beforeAll, beforeEach, vi, afterAll } from "vitest";
+import {
+  expect,
+  test,
+  describe,
+  beforeAll,
+  beforeEach,
+  vi,
+  afterAll,
+} from "vitest";
 import request from "supertest";
 import * as gameSetup from "../src/db/gameSetup";
 import { clearGameAndSessionRows } from "../src/db/gameSetup";
@@ -185,7 +193,7 @@ describe("initial game setup", () => {
   });
 });
 
-describe.only("test answers", () => {
+describe("test answers", () => {
   let agent;
 
   beforeAll(async () => {
@@ -441,7 +449,7 @@ describe.only("test answers", () => {
   );
 });
 
-describe.only("test top ten", () => {
+describe("test top ten", () => {
   let agent;
 
   beforeEach(async () => {
@@ -454,43 +462,45 @@ describe.only("test top ten", () => {
   });
 
   afterAll(async () => {
-    // clearGameAndSessionRows();
+    clearGameAndSessionRows();
   });
 
-  test.each([100,200,300,400,500,600,700,800,900,1000])("PUT /game/answer all characters found & top ten %#", async (delay) => {
-    const res1 = await agent
-      .put("/game/answer")
-      .query({ x: 0.07, y: 24.82, character: "Odlaw" })
-      .set("Accept", "application/json");
+  test.each([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])(
+    "PUT /game/answer all characters found & top ten %#",
+    async (delay) => {
+      const res1 = await agent
+        .put("/game/answer")
+        .query({ x: 0.07, y: 24.82, character: "Odlaw" })
+        .set("Accept", "application/json");
 
-    expect(res1.status).toEqual(200); //first correct answer
+      expect(res1.status).toEqual(200); //first correct answer
 
-    const res2 = await agent
-      .put("/game/answer")
-      .query({ x: 10.48, y: 25.11, character: "Waldo" })
-      .set("Accept", "application/json");
+      const res2 = await agent
+        .put("/game/answer")
+        .query({ x: 10.48, y: 25.11, character: "Waldo" })
+        .set("Accept", "application/json");
 
-    expect(res2.status).toEqual(200); //second correct answer
+      expect(res2.status).toEqual(200); //second correct answer
 
-    
-    const wait = util.promisify(setTimeout);
-    await wait(delay);
+      const wait = util.promisify(setTimeout);
+      await wait(delay);
 
-    const res3 = await agent
-      .put("/game/answer")
-      .query({ x: 48.08, y: 20.61, character: "Wizard Whitebeard" })
-      .set("Accept", "application/json");
+      const res3 = await agent
+        .put("/game/answer")
+        .query({ x: 48.08, y: 20.61, character: "Wizard Whitebeard" })
+        .set("Accept", "application/json");
 
-    expect(res3.status).toEqual(200);
-    expect(res3.body).toMatchObject({
-      message: "Correct answer",
-      x: "48.08",
-      y: "20.61",
-      character: "Wizard Whitebeard",
-      inTopTen: true,
-    });
-    expect(res3.body).toHaveProperty("end_time");
-  });
+      expect(res3.status).toEqual(200);
+      expect(res3.body).toMatchObject({
+        message: "Correct answer",
+        x: "48.08",
+        y: "20.61",
+        character: "Wizard Whitebeard",
+        inTopTen: true,
+      });
+      expect(res3.body).toHaveProperty("end_time");
+    }
+  );
 
   test("PUT /game/answer not in top ten", async () => {
     const res1 = await agent
@@ -526,5 +536,89 @@ describe.only("test top ten", () => {
     });
     expect(res3.body).toHaveProperty("end_time");
   });
+});
 
+describe("test ongoing game", () => {
+  let agent;
+
+  beforeEach(async () => {
+    agent = request.agent(app);
+    const route = "/game";
+    await agent.get(route).set("Accept", "application/json");
+  });
+
+  afterAll(async () => {
+    //clearGameAndSessionRows();
+  });
+
+  test("GET /game after one correct answer", async () => {
+    const res1 = await agent
+      .put("/game/answer")
+      .query({ x: 0.07, y: 24.82, character: "Odlaw" })
+      .set("Accept", "application/json");
+
+    expect(res1.status).toEqual(200); //first correct answer
+
+    const res = await agent
+
+      .get("/game")
+
+      .set("Accept", "application/json");
+
+    expect(res.status).toEqual(200);
+    expect(res.body.message).toEqual("success");
+    expect(res.body.game).toBeTypeOf("object");
+    expect(res.body.game).toHaveProperty("id");
+    expect(res.body.game).toHaveProperty("username", "anonymous");
+    expect(res.body.game).toHaveProperty("start_time");
+    expect(res.body.game.start_time).toBeTypeOf("number");
+    expect(res.body.game).toHaveProperty("end_time", null);
+    expect(res.body.game).toHaveProperty("scene");
+    expect(res.body.game.scene).toHaveProperty("characters");
+    expect(res.body.game.scene.characters).toHaveLength(2);
+    expect(res.body.game.scene).toEqual({
+      id: expect.toSatisfy((input) => Number.isInteger(input)),
+      url: expect.stringMatching(/^https:\/\/.*\.jpg/),
+      characters: expect.arrayContaining(["Waldo", "Wizard Whitebeard"]),
+    });
+  });
+
+  test("GET /game after 2 correct answers", async () => {
+    const res1 = await agent
+      .put("/game/answer")
+      .query({ x: 0.07, y: 24.82, character: "Odlaw" })
+      .set("Accept", "application/json");
+
+    expect(res1.status).toEqual(200); //first correct answer
+
+    const res2 = await agent
+      .put("/game/answer")
+      .query({ x: 10.47, y: 25.11, character: "Waldo" })
+      .set("Accept", "application/json");
+
+    expect(res2.status).toEqual(200); //second correct answer
+
+    const res = await agent
+
+      .get("/game")
+
+      .set("Accept", "application/json");
+
+    expect(res.status).toEqual(200);
+    expect(res.body.message).toEqual("success");
+    expect(res.body.game).toBeTypeOf("object");
+    expect(res.body.game).toHaveProperty("id");
+    expect(res.body.game).toHaveProperty("username", "anonymous");
+    expect(res.body.game).toHaveProperty("start_time");
+    expect(res.body.game.start_time).toBeTypeOf("number");
+    expect(res.body.game).toHaveProperty("end_time", null);
+    expect(res.body.game).toHaveProperty("scene");
+    expect(res.body.game.scene).toHaveProperty("characters");
+    expect(res.body.game.scene.characters).toHaveLength(1);
+    expect(res.body.game.scene).toEqual({
+      id: expect.toSatisfy((input) => Number.isInteger(input)),
+      url: expect.stringMatching(/^https:\/\/.*\.jpg/),
+      characters: expect.arrayContaining(["Wizard Whitebeard"]),
+    });
+  });
 });

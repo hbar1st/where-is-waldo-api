@@ -24,7 +24,7 @@ This is the main route that a client app would use to start a game as this route
 
 GET /scene/:id/topten      returns the top ten players and their game times for the scene being played
 
-PUT /game/:id/answer?x=X&y=Y       (x is normalized percentage value from the left, and y is normalized percentage value from the top. Both are of no more than 2 decimal precison. The origin is top left. Correct answers are accurate to a degree of 0.01 from the correct value.)
+PUT /game/answer?x=X&y=Y&character="Waldo"    (x is normalized percentage value from the left, and y is normalized percentage value from the top. Both are of no more than 2 decimal precison. The origin is top left. Correct answers are accurate to a degree of 0.01 from the correct value.) The character name is one of the values returned from GET /scene/:id/characters
 If the answer is correct, and there are no more characters to be found, the game ends and an elapsed time is calculated. If the elapsed time is in the top ten scores, the user's score can be saved.
 (if the same game is to be replayed, the client should delete the cookie before sending a new GET /game request to restart the game)
 
