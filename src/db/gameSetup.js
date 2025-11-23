@@ -46,6 +46,19 @@ export async function getSceneCharacters(id) {
     console.error("id is missing");
   }
 }
+
+export async function getTopTen(sceneId) {
+  console.log("in getTopTen: ", sceneId)
+  const topTen = await prisma.$queryRawUnsafe(
+    `SELECT id,username, CAST(end_time - start_time AS Text) AS elapsed_time 
+  FROM game WHERE scene_id=${Number(sceneId)}
+  AND end_time IS NOT NULL
+  ORDER BY elapsed_time ASC
+  LIMIT 10;`
+  );
+  return topTen;
+}
+
 export async function inTopTen(gameId) {
   console.log("in inTopTen: ", gameId);
 

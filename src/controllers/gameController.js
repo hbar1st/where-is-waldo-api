@@ -15,6 +15,7 @@ const {
   getGameAnswerCount,
   endGame,
   inTopTen,
+  getTopTen: dbGetTopTen,
 } = gameSetup;
 
 /**
@@ -228,6 +229,22 @@ export async function evaluateAnswer(req, res) {
   } catch (error) {
     console.error(error);
     throw (error)
+  }
+}
+
+export async function getTopTen(req, res) {
+  const sceneId = req.params.id;
+  try {
+    const topTen = await dbGetTopTen(sceneId);
+    if (topTen) {
+      console.log(topTen)
+      res.status(200).json({ message: "Success", topTen })
+    } else {
+      throw new AppError("Failed to get the top ten for the scene")
+    }
+  } catch (error) {
+    console.error(error);
+    throw (error);
   }
 }
 

@@ -11,8 +11,8 @@
     "db:reset": "npx prisma migrate reset -f && npm run prisma:generate",
     "migrate:deploy": "prisma migrate deploy && npm run prisma:generate",
     "test:reset": "NODE_ENV=test npm run db:reset",
-    "test": "NODE_ENV=test npx prisma db push && vitest --disableConsoleIntercept",
-    "start": "nodemon src/index.js",
+    "test": "NODE_ENV=test ./migratePrisma.sh && ./seed_db.sh && vitest --disableConsoleIntercept",
+    "start": "nodemon --delay 1000ms src/index.js",
     "dev": "NODE_ENV=development nodemon src/index.js"
   },
   "devDependencies": {

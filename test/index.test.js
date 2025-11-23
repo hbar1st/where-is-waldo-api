@@ -107,7 +107,7 @@ describe("initial game setup", () => {
     console.log("cookie: ", res.headers["set-cookie"]);
   });
 
-  test("GET /scene/:id/characters scnee id does not exist", async () => {
+  test("GET /scene/:id/characters scene id does not exist", async () => {
     const sceneId = 0;
     console.log(`invalid scene id: ${sceneId}`);
     const route = `/scene/${sceneId}/characters`;
@@ -136,6 +136,7 @@ describe("initial game setup", () => {
 
   /** this route gets the character names that belong to a specific scene */
   test("GET /scene/:id/characters happy path", async () => {
+    // first get the current scene id
     const scene = await agent
       .get("/scene")
 
@@ -143,6 +144,7 @@ describe("initial game setup", () => {
 
     expect(scene.body.id).toBeTypeOf("number");
     const sceneId = scene.body.id;
+
     if (sceneId) {
       console.log(`try to get characters for scene id: ${sceneId}`);
       const route = `/scene/${sceneId}/characters`;
@@ -536,6 +538,32 @@ describe("test top ten", () => {
     });
     expect(res3.body).toHaveProperty("end_time");
   });
+
+  
+  test("GET /scene/:id/topten happy path", async () => {
+    const scene = await agent
+      .get("/scene")
+
+      .set("Accept", "application/json");
+
+    expect(scene.body.id).toBeTypeOf("number");
+    const sceneId = scene.body.id;
+
+    const topTen = await agent
+      .get(`/scene/${sceneId}/topten`)
+      .set("Accept", "application/json");
+
+    expect(topTen.status).toEqual(200);
+    expect(topTen.body).toHaveProperty("topTen");
+    expect(topTen.body.topTen).toHaveLength(10);
+    for (let i = 0; i < 10; i++) {
+      expect(topTen.body.topTen[i]).toHaveProperty("username");
+      expect(topTen.body.topTen[i]).toHaveProperty("id");
+      expect(topTen.body.topTen[i]).toHaveProperty("elapsed_time");
+    }
+  });
+
+  //end of describe section
 });
 
 describe("test ongoing game", () => {
@@ -620,5 +648,32 @@ describe("test ongoing game", () => {
       url: expect.stringMatching(/^https:\/\/.*\.jpg/),
       characters: expect.arrayContaining(["Wizard Whitebeard"]),
     });
+  });
+
+  test("GET /scene/:id/topten invalid id", async () => {
+    const topTen = await agent
+      .get(`/scene/0/topten`)
+      .set("Accept", "application/json");
+
+    expect(topTen.status).toEqual(400);
+  });
+
+  test("GET /scene/:id/topten none found", async () => {
+    const scene = await agent
+      .get("/scene")
+
+      .set("Accept", "application/json");
+
+    expect(scene.body.id).toBeTypeOf("number");
+    const sceneId = scene.body.id;
+
+    const topTen = await agent
+      .get(`/scene/${sceneId}/topten`)
+      .set("Accept", "application/json");
+
+    expect(topTen.status).toEqual(200);
+    expect(topTen.body).toHaveProperty("topTen");
+    const resDetails = {};
+    expect(topTen.body.topTen).toMatchObject(resDetails);
   });
 });

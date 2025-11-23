@@ -17,7 +17,7 @@ Routes supported by this api:
 GET /                      gives a short description
 GET /scene                 returns a scene url and id
 GET /scene/:id/characters  returns a list of character names and the enum values valid for the scene
-GET /game                  if the user's session cookie contains a valid game id, this returns a list of remaining characters and the location of the ones that were successfully found plus the game start time (as well as the current scene id and url). 
+GET /game                  if the user's session cookie contains a valid game id, this returns a list of remaining characters and the location of the ones that were successfully found plus the game start time (as well as the current scene id and url). It also gives the current game id which can be used to see if the user is in the top ten list (matched on the game id)
 If the user doesn't have a valid game id in a session cookie, then they will get a brand new game
 This is the main route that a client app would use to start a game as this route returns everything you need to get started (or complete an ongoing game)
 

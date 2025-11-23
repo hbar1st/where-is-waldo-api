@@ -72,6 +72,7 @@ model Answer {
 model CharacterName {
   character   Character     @unique
   name        String
+  icon_url     String
   answers     Answer[]
   gameAnswers Game_Answer[]
 

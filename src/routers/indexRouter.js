@@ -4,6 +4,7 @@ import {
   getGame, setupGame, getSessionData,
   getGameID,
   evaluateAnswer,
+  getTopTen,
 } from "../controllers/gameController.js"
 
 import {
@@ -49,3 +50,9 @@ indexRouter.put(
   handleExpressValidationErrors,
   evaluateAnswer
 );
+
+indexRouter.get("/scene/:id/topten",
+  checkSceneId,
+  handleExpressValidationErrors,
+  getTopTen
+)
