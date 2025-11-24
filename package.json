@@ -9,12 +9,12 @@
     "prisma:generate": "prisma generate",
     "migrate:update": "npx prisma migrate reset -f && npx prisma migrate dev && npm db:reset",
     "db:reset": "npx prisma migrate reset -f && npm run prisma:generate",
-    "db:resetAndSeed": "npx prisma migrate reset -f && ./seed_db.sh",
+    "db:resetAndSeed": "node dropAllTables.js && npx prisma migrate reset -f  && node seedDB.js",
     "migrate:deploy": "prisma migrate deploy && npm run prisma:generate",
     "test:reset": "NODE_ENV=test npm run db:reset",
     "test": "NODE_ENV=test ./migratePrisma.sh && ./seed_db.sh && vitest --disableConsoleIntercept",
     "start": "npm run db:resetAndSeed && nodemon src/index.js",
-    "deploy": "npm run db:resetAndSeed && nodemon src/index.js",
+    "deploy": "npm run db:resetAndSeed && node src/index.js",
     "dev": "NODE_ENV=development nodemon --delay 1000ms src/index.js"
   },
   "devDependencies": {
