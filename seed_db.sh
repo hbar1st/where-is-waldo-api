@@ -1,3 +1,6 @@
+
+source ./.env
+
 seed_db() { 
   echo -e "\nWorking on clearing/migrating/seeding table: $1\n"
 
@@ -31,10 +34,10 @@ $PSQL "truncate table answer,character_name,scene,game,game_answer,session"
 }
 
 echo -e "\033[4m Seed test db \033[0m"
-seed_db "test_waldo"
+seed_db $TEST_DB_NAME
 
 echo -e "\n"
 echo -e "\033[4m Seed dev db \033[0m"
-seed_db "waldo"
+seed_db $DB_NAME
 
 echo -e "\033[1m \nDB migration and seeding completed.\n \033[0m"

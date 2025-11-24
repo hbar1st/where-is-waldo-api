@@ -16,6 +16,7 @@ const {
   endGame,
   inTopTen,
   getTopTen: dbGetTopTen,
+  setUsername: dbSetUsername,
 } = gameSetup;
 
 /**
@@ -26,12 +27,12 @@ const {
  *
  * @param {*} sid the session id retrieved from the cookie
  */
-export async function setupGame(req,res,next) {
+export async function setupGame(req, res, next) {
   const sid = req.session.id;
-  console.log("in setupGame: ", sid)
+  console.log("in setupGame: ", sid);
   if (!req.session.gameId) {
     // insert a new game into the game table and update the session with the new game id
-    console.log("make a new game")
+    console.log("make a new game");
     try {
       const scene = await dbGetScene(); //gets the first and only scene for now
       if (scene) {
@@ -54,7 +55,7 @@ export async function setupGame(req,res,next) {
 }
 
 export async function getGameID(sid) {
-  console.log("in getGameID: ", sid)
+  console.log("in getGameID: ", sid);
   try {
     const sData = await getSessionData(sid);
     console.log("retrieved the parsed data: ", sData);
@@ -63,12 +64,12 @@ export async function getGameID(sid) {
     }
   } catch (error) {
     console.error(error);
-    throw new AppError("Failed to get the session data")
+    throw new AppError("Failed to get the session data");
   }
 }
 
 export async function getSessionData(sid) {
-  console.log("in getSessionData: ", sid)
+  console.log("in getSessionData: ", sid);
   try {
     const session = await getSession(sid);
     let sData = null;
@@ -79,8 +80,8 @@ export async function getSessionData(sid) {
     }
     return sData;
   } catch (error) {
-    console.error(error)
-    throw new AppError(`Failed to get the sesssion for ${sid}`)
+    console.error(error);
+    throw new AppError(`Failed to get the sesssion for ${sid}`);
   }
 }
 
@@ -138,13 +139,18 @@ export async function getGame(req, res) {
       // - turn the start time stamp into an epoch timestamp
       // - reorganize the return values so the db schema is not obvious and for the client's convenience
       if (game) {
-        console.log("getGame game: ",game)
+        console.log("getGame game: ", game);
         console.log("start_time from the db: ", game.start_time);
         game.start_time = new Date(game.start_time).valueOf();
         console.log("start_time as epoch value: ", game.start_time);
-        console.log("found character names: ", game.gameAnswers.length > 0 ? game.gameAnswers[0].character_name : game.gameAnswers)
+        console.log(
+          "found character names: ",
+          game.gameAnswers.length > 0
+            ? game.gameAnswers[0].character_name
+            : game.gameAnswers
+        );
         game.scene.characters = game.scene.answers.reduce((acc, el) => {
-          const characterName = el["character_name"].name;;
+          const characterName = el["character_name"].name;
           if (
             game.gameAnswers.length > 0
               ? !checkGameAnswers(game.gameAnswers, characterName)
@@ -158,7 +164,9 @@ export async function getGame(req, res) {
         return res.status(200).json({ message: "success", game });
       }
     } else {
-      throw new AppError(`failed to get a game id from the current session: ${req.session.id}`)
+      throw new AppError(
+        `failed to get a game id from the current session: ${req.session.id}`
+      );
     }
   } catch (error) {
     console.error(error);
@@ -167,7 +175,7 @@ export async function getGame(req, res) {
 }
 
 export async function evaluateAnswer(req, res) {
-  console.log("in evaluateAnswer: ", req.query)
+  console.log("in evaluateAnswer: ", req.query);
   const x = req.query.x;
   const y = req.query.y;
   const characterName = req.query.character;
@@ -178,17 +186,28 @@ export async function evaluateAnswer(req, res) {
   try {
     const sceneId = await getGameScene(gameId);
     const characterKey = await getCharacterKey(characterName);
-    const answerRow = await getAnswer(sceneId.scene_id, characterKey.character)
+    const answerRow = await getAnswer(sceneId.scene_id, characterKey.character);
     if (answerRow) {
-      if (inRange(answerRow.location_x, x) && inRange(answerRow.location_y, y)) {
+      if (
+        inRange(answerRow.location_x, x) &&
+        inRange(answerRow.location_y, y)
+      ) {
         // log the answer in the game_answer table and get the count of all answers found
-        const gameAnswer = await setGameAnswer(gameId, characterKey.character, x, y)
-        let [gameAnswerCount, expectedAnswerCount] =
-          await Promise.all([
-            getGameAnswerCount(gameId),
-            getSceneAnswerCount(sceneId.scene_id)
-          ]);
-        console.log("this game's answer count: ", gameAnswerCount, expectedAnswerCount)
+        const gameAnswer = await setGameAnswer(
+          gameId,
+          characterKey.character,
+          x,
+          y
+        );
+        let [gameAnswerCount, expectedAnswerCount] = await Promise.all([
+          getGameAnswerCount(gameId),
+          getSceneAnswerCount(sceneId.scene_id),
+        ]);
+        console.log(
+          "this game's answer count: ",
+          gameAnswerCount,
+          expectedAnswerCount
+        );
         const resultObj = {
           message: "Correct answer",
           x,
@@ -199,7 +218,7 @@ export async function evaluateAnswer(req, res) {
         if (gameAnswerCount === expectedAnswerCount) {
           // record the end time in the game table
           const updatedGame = await endGame(gameId);
-          
+
           // calculate the elapsed time
           const end_time = calculateElapsedTime(
             updatedGame.start_time,
@@ -214,21 +233,25 @@ export async function evaluateAnswer(req, res) {
           const topTen = await inTopTen(gameId);
           if (topTen.length > 0) {
             // send back the key topten: true if the score is in the highest ten scores
-            resultObj.inTopTen = true
+            resultObj.inTopTen = true;
           } else {
-            resultObj.inTopTen = false
+            resultObj.inTopTen = false;
           }
         }
         res.status(200).json(resultObj);
       } else {
-        res.status(400).json({ message: "Wrong answer", x, y, character: characterName })
+        res
+          .status(400)
+          .json({ message: "Wrong answer", x, y, character: characterName });
       }
     } else {
-      res.status(400).json({ message: "Wrong answer", x, y, character: characterName });
+      res
+        .status(400)
+        .json({ message: "Wrong answer", x, y, character: characterName });
     }
   } catch (error) {
     console.error(error);
-    throw (error)
+    throw error;
   }
 }
 
@@ -237,34 +260,61 @@ export async function getTopTen(req, res) {
   try {
     const topTen = await dbGetTopTen(sceneId);
     if (topTen) {
-      console.log(topTen)
-      res.status(200).json({ message: "Success", topTen })
+      console.log(topTen);
+      res.status(200).json({ message: "Success", topTen });
     } else {
-      throw new AppError("Failed to get the top ten for the scene")
+      throw new AppError("Failed to get the top ten for the scene");
     }
   } catch (error) {
     console.error(error);
-    throw (error);
+    throw error;
+  }
+}
+
+export async function setUsername(req, res) {
+  const gameId = req.session.gameId;
+  try {
+    // find the top ten and see if the current game is in the top?
+    const topTen = await inTopTen(gameId);
+    if (topTen.length > 0) {
+      const game = await dbSetUsername(gameId, req.params.username);
+      if (game) {
+        res.status(200).json({ message: "Success", game });
+      } else {
+        throw new AppError("Failed to set the username for this game");
+      }
+    } else {
+      res
+        .status(400)
+        .json({ message: "Action has failed due to some validation errors" });
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
 
 export function calculateElapsedTime(startTime, endTime) {
-  console.log("calculateElpasedTime: ", startTime, endTime);  
+  console.log("calculateElpasedTime: ", startTime, endTime);
   return new Date(endTime).valueOf() - new Date(startTime).valueOf();
 }
 
 function inRange(correctAnswer, userAnswer) {
   console.log("in inRange: ", correctAnswer, userAnswer);
-  const diff = (Math.abs(correctAnswer - userAnswer)).toFixed(2);
-  console.log("the diff is: ", diff)
+  const diff = Math.abs(correctAnswer - userAnswer).toFixed(2);
+  console.log("the diff is: ", diff);
   return diff <= 0.01;
 }
 
 function checkGameAnswers(answerArr, value) {
-  console.log("in checkGameAnswers:", answerArr, value)
-  
+  console.log("in checkGameAnswers:", answerArr, value);
+
   return answerArr.reduce((acc, el) => {
-    console.log("check equal: ", el.character_name.name.toLowerCase(), value.toLowerCase());
-    return acc || (el.character_name.name.toLowerCase() === value.toLowerCase())
-  }, false)
+    console.log(
+      "check equal: ",
+      el.character_name.name.toLowerCase(),
+      value.toLowerCase()
+    );
+    return acc || el.character_name.name.toLowerCase() === value.toLowerCase();
+  }, false);
 }

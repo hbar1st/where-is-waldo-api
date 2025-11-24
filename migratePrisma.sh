@@ -11,8 +11,8 @@ echo -e "\033[4m Setup the main db at $DATABASE_URL for $DB_USER \033[0m"
 
 
 echo "- DROP all the tables"
-
-PSQL="psql --username=$DB_USER --dbname=$1 -t -q --no-align -c"
+fd
+PSQL="psql --username=$DB_USER --dbname=$DB_NAME -t -q --no-align -c"
 $PSQL "drop table if exists answer,character_name,scene,game,game_answer,session"
 
 npx prisma migrate dev

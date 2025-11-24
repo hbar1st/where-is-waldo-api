@@ -9,11 +9,13 @@
     "prisma:generate": "prisma generate",
     "migrate:update": "npx prisma migrate reset -f && npx prisma migrate dev && npm db:reset",
     "db:reset": "npx prisma migrate reset -f && npm run prisma:generate",
+    "db:resetAndSeed": "npx prisma migrate reset -f && ./seed_db.sh",
     "migrate:deploy": "prisma migrate deploy && npm run prisma:generate",
     "test:reset": "NODE_ENV=test npm run db:reset",
     "test": "NODE_ENV=test ./migratePrisma.sh && ./seed_db.sh && vitest --disableConsoleIntercept",
-    "start": "nodemon --delay 1000ms src/index.js",
-    "dev": "NODE_ENV=development nodemon src/index.js"
+    "start": "npm run db:resetAndSeed && nodemon src/index.js",
+    "deploy": "npm run db:resetAndSeed && nodemon src/index.js",
+    "dev": "NODE_ENV=development nodemon --delay 1000ms src/index.js"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",

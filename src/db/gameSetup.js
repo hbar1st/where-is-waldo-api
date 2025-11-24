@@ -245,3 +245,16 @@ export async function setGameAnswer(gameId, character, x, y) {
   });
   return gameAnswer;
 }
+
+export async function setUsername(gameId, username) {
+  console.log("in setUsername: ", username);
+  const game = await prisma.game.update({
+    where: {
+      id: Number(gameId)
+    }, 
+    data: {
+      username
+    }
+  })
+  return game;
+}

@@ -25,7 +25,7 @@ model Session {
 
 model Game {
   id          Int           @id @default(autoincrement())
-  username    String        @default("anonymous")
+  username    String        @db.VarChar(25) @default("anonymous")
   start_time  DateTime      @default(now())
   end_time    DateTime?
   scene       Scene         @relation(fields: [scene_id], references: [id], onDelete: Cascade)
@@ -71,8 +71,8 @@ model Answer {
 
 model CharacterName {
   character   Character     @unique
-  name        String
-  icon_url     String
+  name        String        
+  icon_url    String        
   answers     Answer[]
   gameAnswers Game_Answer[]
 

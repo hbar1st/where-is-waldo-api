@@ -1,21 +1,24 @@
 import express from "express";
 import {
-  getScene, getCharacters,
-  getGame, setupGame, getSessionData,
+  getScene,
+  getCharacters,
+  getGame,
+  setupGame,
+  getSessionData,
   getGameID,
   evaluateAnswer,
   getTopTen,
-} from "../controllers/gameController.js"
+  setUsername,
+} from "../controllers/gameController.js";
 
 import {
   checkSceneId,
   checkSessionGameId,
   checkCoordinates,
   checkCharacter,
+  checkUsername,
 } from "../validators/gameValidator.js";
 import { handleExpressValidationErrors } from "./routerUtil.js";
-import { AppError } from "../errors/AppError.js";
-import { getAllSessions } from "../db/gameSetup.js"
 
 export const indexRouter = express.Router();
 
@@ -36,11 +39,15 @@ indexRouter.get(
   getCharacters
 );
 
-indexRouter.get(
-  "/game",
-  setupGame,
-  getGame
-);
+indexRouter
+  .route("/game")
+  .get(setupGame, getGame)
+  .post(
+    checkSessionGameId,
+    checkUsername,
+    handleExpressValidationErrors,
+    setUsername
+  );
 
 indexRouter.put(
   "/game/answer",
@@ -51,8 +58,9 @@ indexRouter.put(
   evaluateAnswer
 );
 
-indexRouter.get("/scene/:id/topten",
+indexRouter.get(
+  "/scene/:id/topten",
   checkSceneId,
   handleExpressValidationErrors,
   getTopTen
-)
+);

@@ -451,7 +451,7 @@ describe("test answers", () => {
   );
 });
 
-describe("test top ten", () => {
+describe.only("test top ten", () => {
   let agent;
 
   beforeEach(async () => {
@@ -537,9 +537,19 @@ describe("test top ten", () => {
       inTopTen: false,
     });
     expect(res3.body).toHaveProperty("end_time");
+
+    // test trying to record username when he's not in top ten
+    const game = await agent
+      .post("/game")
+
+      .set("Accept", "application/json")
+
+      .send({ username: "hacker" });
+    
+    expect(game.status).toEqual(400);
+    expect(game.body.message).toEqual("This game is not in the top ten");
   });
 
-  
   test("GET /scene/:id/topten happy path", async () => {
     const scene = await agent
       .get("/scene")
@@ -563,6 +573,39 @@ describe("test top ten", () => {
     }
   });
 
+  test("POST /game - username blank in request body", async () => {
+    const game = await agent
+      .post("/game")
+
+      .set("Accept", "application/json")
+
+      .send({ username: "" });
+    
+    expect(game.status).toEqual(400);
+    expect(game.body.message).toEqual(
+      "Action has failed due to some validation errors"
+    );
+    
+    expect(game.body.details).toBeDefined();
+    expect(game.body.details.length).toEqual(2);
+        const resDetails = {
+          type: "field",
+          value: "",
+          msg: "username should not be blank",
+          path: "username",
+          location: "body",
+        };
+        expect(game.body.details[0]).toMatchObject(resDetails);
+  });
+
+  /*
+      test("POST /game - username not found in request body", async () => {
+    const game = await agent.post("/game")
+      .set("Accept", "application/json");
+      
+    expect(game.status).toEqual(400);
+  });
+  */
   //end of describe section
 });
 
@@ -676,4 +719,14 @@ describe("test ongoing game", () => {
     const resDetails = {};
     expect(topTen.body.topTen).toMatchObject(resDetails);
   });
+});
+
+test("POST /game - game id invalid", async () => {
+  const game = await request(app)
+    .post("/game")
+    .set("Accept", "application/json")
+
+    .send({ username: "hacker" });
+
+  expect(game.status).toEqual(400);
 });
