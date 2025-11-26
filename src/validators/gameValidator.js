@@ -100,7 +100,7 @@ export const checkSessionGameId = (req, res, next) => {
   if (gameId) {
     next();
   } else {
-    throw new ValidationError("Failed to find the gameId in the session");
+    throw new ValidationError(`Failed to find the gameId in the session: ${req.session.id} \n ${req.method} ${req.originalUrl}`);
   }
 };
 

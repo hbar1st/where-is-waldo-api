@@ -277,7 +277,7 @@ export async function setUsername(req, res) {
     // find the top ten and see if the current game is in the top?
     const topTen = await inTopTen(gameId);
     if (topTen.length > 0) {
-      const game = await dbSetUsername(gameId, req.params.username);
+      const game = await dbSetUsername(gameId, req.body.username);
       if (game) {
         res.status(200).json({ message: "Success", game });
       } else {
@@ -286,7 +286,7 @@ export async function setUsername(req, res) {
     } else {
       res
         .status(400)
-        .json({ message: "Action has failed due to some validation errors" });
+        .json({ message: "This game is not in the top ten"});
     }
   } catch (error) {
     console.error(error);

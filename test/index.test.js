@@ -11,7 +11,6 @@ import {
   afterAll,
 } from "vitest";
 import request from "supertest";
-import * as gameSetup from "../src/db/gameSetup";
 import { clearGameAndSessionRows } from "../src/db/gameSetup";
 
 import util from "node:util";
@@ -199,6 +198,8 @@ describe("test answers", () => {
   let agent;
 
   beforeAll(async () => {
+    clearGameAndSessionRows();
+
     agent = request.agent(app);
     const route = "/game";
     await agent
@@ -207,6 +208,7 @@ describe("test answers", () => {
       .set("Accept", "application/json");
   });
 
+  
   afterAll(async () => {
     clearGameAndSessionRows();
   });
@@ -451,8 +453,13 @@ describe("test answers", () => {
   );
 });
 
-describe.only("test top ten", () => {
+describe("test top ten", () => {
   let agent;
+
+  
+  beforeAll(async () => {
+    clearGameAndSessionRows();
+  });
 
   beforeEach(async () => {
     agent = request.agent(app);
@@ -463,6 +470,11 @@ describe.only("test top ten", () => {
       .set("Accept", "application/json");
   });
 
+  beforeAll(async () => {
+    clearGameAndSessionRows();
+  });
+
+  
   afterAll(async () => {
     clearGameAndSessionRows();
   });
@@ -501,6 +513,48 @@ describe.only("test top ten", () => {
         inTopTen: true,
       });
       expect(res3.body).toHaveProperty("end_time");
+
+      // test trying to record username since elapsed_time is in top ten
+      const username = `bestOfTheBest-${delay}`;
+      const game = await agent
+        .post("/game")
+
+        .set("Accept", "application/json")
+
+        .send({ username });
+
+      expect(game.status).toEqual(200);
+      expect(game.body.message).toEqual("Success");
+      expect(game.body).toHaveProperty("game");
+      expect(game.body.game).toMatchObject({
+        username,
+      });
+
+      // get the scene then try to get the top ten to see if the user name is recorded
+      const scene = await agent
+        .get("/scene")
+
+        .set("Accept", "application/json");
+
+      expect(scene.body.id).toBeTypeOf("number");
+      const sceneId = scene.body.id;
+
+      const topTen = await agent
+        .get(`/scene/${sceneId}/topten`)
+        .set("Accept", "application/json");
+
+      expect(topTen.status).toEqual(200);
+      expect(topTen.body).toHaveProperty("topTen");
+      expect(topTen.body.topTen.length).toBeGreaterThanOrEqual(1);
+      const topTenUsernames = [];
+
+      for (let i = 0; i < topTen.body.topTen.length; i++) {
+        topTenUsernames.push(topTen.body.topTen[i].username);
+
+        expect(topTen.body.topTen[i].id).toBeDefined();
+        expect(topTen.body.topTen[i].elapsed_time).toBeDefined();
+      }
+      expect(topTenUsernames).toContain(username);
     }
   );
 
@@ -545,7 +599,7 @@ describe.only("test top ten", () => {
       .set("Accept", "application/json")
 
       .send({ username: "hacker" });
-    
+
     expect(game.status).toEqual(400);
     expect(game.body.message).toEqual("This game is not in the top ten");
   });
@@ -580,32 +634,35 @@ describe.only("test top ten", () => {
       .set("Accept", "application/json")
 
       .send({ username: "" });
-    
+
     expect(game.status).toEqual(400);
     expect(game.body.message).toEqual(
       "Action has failed due to some validation errors"
     );
-    
+
     expect(game.body.details).toBeDefined();
     expect(game.body.details.length).toEqual(2);
-        const resDetails = {
-          type: "field",
-          value: "",
-          msg: "username should not be blank",
-          path: "username",
-          location: "body",
-        };
-        expect(game.body.details[0]).toMatchObject(resDetails);
+    const resDetails = {
+      type: "field",
+      value: "",
+      msg: "username should not be blank",
+      path: "username",
+      location: "body",
+    };
+    expect(game.body.details[0]).toMatchObject(resDetails);
   });
 
-  /*
-      test("POST /game - username not found in request body", async () => {
-    const game = await agent.post("/game")
-      .set("Accept", "application/json");
-      
+  test("POST /game - username not found in request body", async () => {
+    const game = await agent.post("/game").set("Accept", "application/json");
+
     expect(game.status).toEqual(400);
+    expect(game.body.message).toEqual(
+      "Action has failed due to some validation errors"
+    );
+    console.log(game.body);
+    expect(game.body.details).toBeDefined();
   });
-  */
+
   //end of describe section
 });
 
@@ -618,8 +675,8 @@ describe("test ongoing game", () => {
     await agent.get(route).set("Accept", "application/json");
   });
 
-  afterAll(async () => {
-    //clearGameAndSessionRows();
+  beforeAll(async () => {
+    clearGameAndSessionRows();
   });
 
   test("GET /game after one correct answer", async () => {
@@ -729,4 +786,7 @@ test("POST /game - game id invalid", async () => {
     .send({ username: "hacker" });
 
   expect(game.status).toEqual(400);
+  expect(game.body.message).toContain(
+    "Failed to find the gameId in the session"
+  );
 });

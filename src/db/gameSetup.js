@@ -247,7 +247,7 @@ export async function setGameAnswer(gameId, character, x, y) {
 }
 
 export async function setUsername(gameId, username) {
-  console.log("in setUsername: ", username);
+  console.log("in setUsername: ", gameId, username);
   const game = await prisma.game.update({
     where: {
       id: Number(gameId)

@@ -1,0 +1,1597 @@
+
+> where-is-waldo-api@1.0.0 test
+> NODE_ENV=test npm run db:resetAndSeed && vitest --disableConsoleIntercept --outputFile ./test-output --reporter=json
+
+
+> where-is-waldo-api@1.0.0 db:resetAndSeed
+> node dropAllTables.js && npx prisma migrate reset -f  && node seedDB.js
+
+
+Begin table drop operation.
+
+All tables dropped.
+Loaded Prisma config from prisma.config.ts.
+
+Prisma config detected, skipping environment variable loading.
+Prisma schema loaded from prisma/schema.prisma
+Datasource "db": PostgreSQL database "test_waldo", schema "public" at "localhost:5432"
+
+Applying migration `20251116232431_init`
+Applying migration `20251117181032_setup_answers`
+Applying migration `20251117182937_change_table_name`
+Applying migration `20251117185301_correct_location_type`
+Applying migration `20251118190238_add_game_answer`
+Applying migration `20251123054517_add_url_character`
+Applying migration `20251123205154_fix_icon_url_name`
+Applying migration `20251124025010_update_username_type`
+
+Database reset successful
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20251116232431_init/
+    └─ migration.sql
+  └─ 20251117181032_setup_answers/
+    └─ migration.sql
+  └─ 20251117182937_change_table_name/
+    └─ migration.sql
+  └─ 20251117185301_correct_location_type/
+    └─ migration.sql
+  └─ 20251118190238_add_game_answer/
+    └─ migration.sql
+  └─ 20251123054517_add_url_character/
+    └─ migration.sql
+  └─ 20251123205154_fix_icon_url_name/
+    └─ migration.sql
+  └─ 20251124025010_update_username_type/
+    └─ migration.sql
+
+Running generate... (Use --skip-generate to skip the generators)
+[2K[1A[2K[GRunning generate... - Prisma Client
+[2K[1A[2K[G✔ Generated Prisma Client (v6.19.0) to ./generated/prisma in 71ms
+
+
+Begin table seeding operation.
+
+All tables seeded successfully.
+{}
+in setupGame:  cORBrzJi--boKHPvD6uahRq_C1b6QsEx
+make a new game
+in getScene
+in addGame:  1
+game.id:  1
+in getGame:  cORBrzJi--boKHPvD6uahRq_C1b6QsEx
+found a game id:  1
+in getGame:  1
+getGame game:  {
+  id: 1,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:04.964Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:04.964Z
+start_time as epoch value:  1764037564964
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  1
+game is:  {
+  id: 1,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:04.964Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  1
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  1 ODLAW 0.07 24.82
+in getGameAnswerCount:  1
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  1
+game is:  {
+  id: 1,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:04.964Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  1
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  1 WALDO 10.48 25.11
+in getGameAnswerCount:  1
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  1
+game is:  {
+  id: 1,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:04.964Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  1
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  1 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  1
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  1
+calculateElpasedTime:  2025-11-25T02:26:04.964Z 2025-11-25T02:26:05.200Z
+elapsed time:  236
+in inTopTen:  1
+{}
+in setupGame:  YM718sl-loWBzUZjuFSPBaByfbOVk4b0
+make a new game
+in getScene
+in addGame:  1
+game.id:  2
+in getGame:  YM718sl-loWBzUZjuFSPBaByfbOVk4b0
+found a game id:  2
+in getGame:  2
+getGame game:  {
+  id: 2,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.214Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:05.214Z
+start_time as epoch value:  1764037565214
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  2
+game is:  {
+  id: 2,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.214Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  2
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  2 ODLAW 0.07 24.82
+in getGameAnswerCount:  2
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  2
+game is:  {
+  id: 2,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.214Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  2
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  2 WALDO 10.48 25.11
+in getGameAnswerCount:  2
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  2
+game is:  {
+  id: 2,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.214Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  2
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  2 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  2
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  2
+calculateElpasedTime:  2025-11-25T02:26:05.214Z 2025-11-25T02:26:05.481Z
+elapsed time:  267
+in inTopTen:  2
+{}
+in setupGame:  NBbr4jb3H_FoTdVI6qEZYBy-FZp_LnoZ
+make a new game
+in getScene
+in addGame:  1
+game.id:  3
+in getGame:  NBbr4jb3H_FoTdVI6qEZYBy-FZp_LnoZ
+found a game id:  3
+in getGame:  3
+getGame game:  {
+  id: 3,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.491Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:05.491Z
+start_time as epoch value:  1764037565491
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  3
+game is:  {
+  id: 3,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.491Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  3
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  3 ODLAW 0.07 24.82
+in getGameAnswerCount:  3
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  3
+game is:  {
+  id: 3,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.491Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  3
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  3 WALDO 10.48 25.11
+in getGameAnswerCount:  3
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  3
+game is:  {
+  id: 3,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.491Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  3
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  3 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  3
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  3
+calculateElpasedTime:  2025-11-25T02:26:05.491Z 2025-11-25T02:26:05.873Z
+elapsed time:  382
+in inTopTen:  3
+{}
+in setupGame:  WcwtQpGTsgrJ1D8YmR62ra29TCnVGx_G
+make a new game
+in getScene
+in addGame:  1
+game.id:  4
+in getGame:  WcwtQpGTsgrJ1D8YmR62ra29TCnVGx_G
+found a game id:  4
+in getGame:  4
+getGame game:  {
+  id: 4,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.883Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:05.883Z
+start_time as epoch value:  1764037565883
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  4
+game is:  {
+  id: 4,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.883Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  4
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  4 ODLAW 0.07 24.82
+in getGameAnswerCount:  4
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  4
+game is:  {
+  id: 4,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.883Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  4
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  4 WALDO 10.48 25.11
+in getGameAnswerCount:  4
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  4
+game is:  {
+  id: 4,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:05.883Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  4
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  4 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  4
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  4
+calculateElpasedTime:  2025-11-25T02:26:05.883Z 2025-11-25T02:26:06.352Z
+elapsed time:  469
+in inTopTen:  4
+{}
+in setupGame:  Pu_LdF2mq1uK6-4N6XDIPcfOyjN9Sm3m
+make a new game
+in getScene
+in addGame:  1
+game.id:  5
+in getGame:  Pu_LdF2mq1uK6-4N6XDIPcfOyjN9Sm3m
+found a game id:  5
+in getGame:  5
+getGame game:  {
+  id: 5,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.360Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:06.360Z
+start_time as epoch value:  1764037566360
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  5
+game is:  {
+  id: 5,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.360Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  5
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  5 ODLAW 0.07 24.82
+in getGameAnswerCount:  5
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  5
+game is:  {
+  id: 5,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.360Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  5
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  5 WALDO 10.48 25.11
+in getGameAnswerCount:  5
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  5
+game is:  {
+  id: 5,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.360Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  5
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  5 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  5
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  5
+calculateElpasedTime:  2025-11-25T02:26:06.360Z 2025-11-25T02:26:06.941Z
+elapsed time:  581
+in inTopTen:  5
+{}
+in setupGame:  41tNXaydjphHx7SxGVPm6MRtOiTFQVgw
+make a new game
+in getScene
+in addGame:  1
+game.id:  6
+in getGame:  41tNXaydjphHx7SxGVPm6MRtOiTFQVgw
+found a game id:  6
+in getGame:  6
+getGame game:  {
+  id: 6,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.954Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:06.954Z
+start_time as epoch value:  1764037566954
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  6
+game is:  {
+  id: 6,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.954Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  6
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  6 ODLAW 0.07 24.82
+in getGameAnswerCount:  6
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  6
+game is:  {
+  id: 6,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.954Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  6
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  6 WALDO 10.48 25.11
+in getGameAnswerCount:  6
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  6
+game is:  {
+  id: 6,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:06.954Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  6
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  6 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  6
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  6
+calculateElpasedTime:  2025-11-25T02:26:06.954Z 2025-11-25T02:26:07.628Z
+elapsed time:  674
+in inTopTen:  6
+{}
+in setupGame:  jADErfwoxh9qEI4lJDEKQIh7Niy2QiYV
+make a new game
+in getScene
+in addGame:  1
+game.id:  7
+in getGame:  jADErfwoxh9qEI4lJDEKQIh7Niy2QiYV
+found a game id:  7
+in getGame:  7
+getGame game:  {
+  id: 7,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:07.654Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:07.654Z
+start_time as epoch value:  1764037567654
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  7
+game is:  {
+  id: 7,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:07.654Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  7
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  7 ODLAW 0.07 24.82
+in getGameAnswerCount:  7
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  7
+game is:  {
+  id: 7,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:07.654Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  7
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  7 WALDO 10.48 25.11
+in getGameAnswerCount:  7
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  7
+game is:  {
+  id: 7,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:07.654Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  7
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  7 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  7
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  7
+calculateElpasedTime:  2025-11-25T02:26:07.654Z 2025-11-25T02:26:08.442Z
+elapsed time:  788
+in inTopTen:  7
+{}
+in setupGame:  plSf_uAa9MCOhzgaKUiV7GEZtgLfr-AA
+make a new game
+in getScene
+in addGame:  1
+game.id:  8
+in getGame:  plSf_uAa9MCOhzgaKUiV7GEZtgLfr-AA
+found a game id:  8
+in getGame:  8
+getGame game:  {
+  id: 8,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:08.450Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:08.450Z
+start_time as epoch value:  1764037568450
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  8
+game is:  {
+  id: 8,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:08.450Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  8
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  8 ODLAW 0.07 24.82
+in getGameAnswerCount:  8
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  8
+game is:  {
+  id: 8,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:08.450Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  8
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  8 WALDO 10.48 25.11
+in getGameAnswerCount:  8
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  8
+game is:  {
+  id: 8,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:08.450Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  8
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  8 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  8
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  8
+calculateElpasedTime:  2025-11-25T02:26:08.450Z 2025-11-25T02:26:09.312Z
+elapsed time:  862
+in inTopTen:  8
+{}
+in setupGame:  KZ-HgWzO7NUX5ID32uR3qdvlQEkrkJq4
+make a new game
+in getScene
+in addGame:  1
+game.id:  9
+in getGame:  KZ-HgWzO7NUX5ID32uR3qdvlQEkrkJq4
+found a game id:  9
+in getGame:  9
+getGame game:  {
+  id: 9,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:09.321Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:09.321Z
+start_time as epoch value:  1764037569321
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  9
+game is:  {
+  id: 9,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:09.321Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  9
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  9 ODLAW 0.07 24.82
+in getGameAnswerCount:  9
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  9
+game is:  {
+  id: 9,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:09.321Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  9
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  9 WALDO 10.48 25.11
+in getGameAnswerCount:  9
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  9
+game is:  {
+  id: 9,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:09.321Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  9
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  9 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  9
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  9
+calculateElpasedTime:  2025-11-25T02:26:09.321Z 2025-11-25T02:26:10.282Z
+elapsed time:  961
+in inTopTen:  9
+{}
+in setupGame:  JuXalhlgHcIvqIDwouC2s-rVM_v697EX
+make a new game
+in getScene
+in addGame:  1
+game.id:  10
+in getGame:  JuXalhlgHcIvqIDwouC2s-rVM_v697EX
+found a game id:  10
+in getGame:  10
+getGame game:  {
+  id: 10,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:10.292Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:10.292Z
+start_time as epoch value:  1764037570292
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  10
+game is:  {
+  id: 10,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:10.292Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  10
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  10 ODLAW 0.07 24.82
+in getGameAnswerCount:  10
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  10
+game is:  {
+  id: 10,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:10.292Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  10
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  10 WALDO 10.48 25.11
+in getGameAnswerCount:  10
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  10
+game is:  {
+  id: 10,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:10.292Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  10
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  10 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  10
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  10
+calculateElpasedTime:  2025-11-25T02:26:10.292Z 2025-11-25T02:26:11.352Z
+elapsed time:  1060
+in inTopTen:  10
+{}
+in setupGame:  TdZfunJSLEJzT86PVbnqiGj_mUB1VpDr
+make a new game
+in getScene
+in addGame:  1
+game.id:  11
+in getGame:  TdZfunJSLEJzT86PVbnqiGj_mUB1VpDr
+found a game id:  11
+in getGame:  11
+getGame game:  {
+  id: 11,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:11.365Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:11.365Z
+start_time as epoch value:  1764037571365
+found character names:  []
+{}
+try to validate the character name exists for the scene
+in getGame:  11
+game is:  {
+  id: 11,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:11.365Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+in getCharacterKey:  Odlaw
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '0.07', y: '24.82', character: 'Odlaw' }
+in getGameScene:  11
+in getCharacterKey:  Odlaw
+in getAnswer:  1 ODLAW
+in inRange:  0.07 0.07
+the diff is:  0.00
+in inRange:  24.82 24.82
+the diff is:  0.00
+in setGameAnswer:  11 ODLAW 0.07 24.82
+in getGameAnswerCount:  11
+in getSceneAnswerCount:  1
+this game's answer count:  1 3
+{}
+try to validate the character name exists for the scene
+in getGame:  11
+game is:  {
+  id: 11,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:11.365Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name: [Object] } ]
+}
+in getCharacterKey:  Waldo
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] { x: '10.48', y: '25.11', character: 'Waldo' }
+in getGameScene:  11
+in getCharacterKey:  Waldo
+in getAnswer:  1 WALDO
+in inRange:  10.47 10.48
+the diff is:  0.01
+in inRange:  25.12 25.11
+the diff is:  0.01
+in setGameAnswer:  11 WALDO 10.48 25.11
+in getGameAnswerCount:  11
+in getSceneAnswerCount:  1
+this game's answer count:  2 3
+{}
+try to validate the character name exists for the scene
+in getGame:  11
+game is:  {
+  id: 11,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:11.365Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: [
+    { location_x: 0.07, location_y: 24.82, character_name: [Object] },
+    { location_x: 10.48, location_y: 25.11, character_name: [Object] }
+  ]
+}
+in getCharacterKey:  Wizard Whitebeard
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in evaluateAnswer:  [Object: null prototype] {
+  x: '48.08',
+  y: '20.61',
+  character: 'Wizard Whitebeard'
+}
+in getGameScene:  11
+in getCharacterKey:  Wizard Whitebeard
+in getAnswer:  1 WIZARD_WHITEBEARD
+in inRange:  48.09 48.08
+the diff is:  0.01
+in inRange:  20.6 20.61
+the diff is:  0.01
+in setGameAnswer:  11 WIZARD_WHITEBEARD 48.08 20.61
+in getGameAnswerCount:  11
+in getSceneAnswerCount:  1
+this game's answer count:  3 3
+in endGame:  11
+calculateElpasedTime:  2025-11-25T02:26:11.365Z 2025-11-25T02:26:12.696Z
+elapsed time:  1331
+in inTopTen:  11
+{}
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in inTopTen:  11
+{}
+in setupGame:  m19eBrXBdNmOQ327VK0WIpihnLpXvUuS
+make a new game
+in getScene
+in addGame:  1
+game.id:  12
+in getGame:  m19eBrXBdNmOQ327VK0WIpihnLpXvUuS
+found a game id:  12
+in getGame:  12
+getGame game:  {
+  id: 12,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:12.737Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:12.737Z
+start_time as epoch value:  1764037572737
+found character names:  []
+{}
+in getScene
+{}
+try to validate if the scene id exists:  1
+in getSceneById:  1
+scene row found:  {
+  id: 1,
+  url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg'
+}
+validation ERRORS?  Result { formatter: [Function: formatter], errors: [] }
+in getTopTen:  1
+[
+  { id: 1, username: 'anonymous', elapsed_time: '00:00:00.236' },
+  { id: 2, username: 'anonymous', elapsed_time: '00:00:00.267' },
+  { id: 3, username: 'anonymous', elapsed_time: '00:00:00.382' },
+  { id: 4, username: 'anonymous', elapsed_time: '00:00:00.469' },
+  { id: 5, username: 'anonymous', elapsed_time: '00:00:00.581' },
+  { id: 6, username: 'anonymous', elapsed_time: '00:00:00.674' },
+  { id: 7, username: 'anonymous', elapsed_time: '00:00:00.788' },
+  { id: 8, username: 'anonymous', elapsed_time: '00:00:00.862' },
+  { id: 9, username: 'anonymous', elapsed_time: '00:00:00.961' },
+  { id: 10, username: 'anonymous', elapsed_time: '00:00:01.06' }
+]
+{}
+in setupGame:  eRl-7L7h2_-U7O5Tc6I6KFSYenJ1ATe4
+make a new game
+in getScene
+in addGame:  1
+game.id:  13
+in getGame:  eRl-7L7h2_-U7O5Tc6I6KFSYenJ1ATe4
+found a game id:  13
+in getGame:  13
+getGame game:  {
+  id: 13,
+  username: 'anonymous',
+  start_time: 2025-11-25T02:26:12.776Z,
+  end_time: null,
+  scene_id: 1,
+  scene: {
+    id: 1,
+    url: 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg',
+    answers: [ [Object], [Object], [Object] ]
+  },
+  gameAnswers: []
+}
+start_time from the db:  2025-11-25T02:26:12.776Z
+start_time as epoch value:  1764037572776
+found character names:  []
+{}
+validation ERRORS?  Result {
+  formatter: [Function: formatter],
+  errors: [
+    {
+      type: 'field',
+      value: '',
+      msg: 'username should not be blank',
+      path: 'username',
+      location: 'body'
+    },
+    {
+      type: 'field',
+      value: '',
+      msg: 'username length should be between 1 and 25 characters',
+      path: 'username',
+      location: 'body'
+    }
+  ]
+}
+================================================
+[AppError]
+in the catch-all:  Tue, 25 Nov 2025 02:26:12 GMT Error: Action has failed due to some validation errors
+    at handleExpressValidationErrors (/home/hbar1st/node-learning/where-is-waldo-api/src/routers/routerUtil.js:9:11)
+    at Layer.handleRequest (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/router/lib/layer.js:152:17)
+    at next (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/router/lib/route.js:157:13)
+    at middleware (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/express-validator/lib/middlewares/check.js:16:13) {
+  statusCode: 400,
+  stackTrace: 'Error: Action has failed due to some validation errors\n' +
+    '    at handleExpressValidationErrors (/home/hbar1st/node-learning/where-is-waldo-api/src/routers/routerUtil.js:9:11)\n' +
+    '    at Layer.handleRequest (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/router/lib/layer.js:152:17)\n' +
+    '    at next (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/router/lib/route.js:157:13)\n' +
+    '    at middleware (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/express-validator/lib/middlewares/check.js:16:13)',
+  timestamp: 'Tue, 25 Nov 2025 02:26:12 GMT',
+  name: 'AppError',
+  details: [
+    {
+      type: 'field',
+      value: '',
+      msg: 'username should not be blank',
+      path: 'username',
+      location: 'body'
+    },
+    {
+      type: 'field',
+      value: '',
+      msg: 'username length should be between 1 and 25 characters',
+      path: 'username',
+      location: 'body'
+    }
+  ],
+  [cause]: undefined
+} Error: Action has failed due to some validation errors
+    at handleExpressValidationErrors (/home/hbar1st/node-learning/where-is-waldo-api/src/routers/routerUtil.js:9:11)
+    at Layer.handleRequest (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/router/lib/layer.js:152:17)
+    at next (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/router/lib/route.js:157:13)
+    at middleware (/home/hbar1st/node-learning/where-is-waldo-api/node_modules/express-validator/lib/middlewares/check.js:16:13)
+true
+AppError
+JSON report written to /home/hbar1st/node-learning/where-is-waldo-api/test-output
+[31mCancelling test run. Press CTRL+c again to exit forcefully.
+[39m
+
+[31m⎯⎯⎯⎯[39m[1m[41m Unhandled Rejection [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mError[22m: [birpc] rpc is closed, cannot call "onCancel"[39m
+[90m [2m❯[22m _call node_modules/vitest/dist/chunks/index.0kCJoeWi.js:[2m28:13[22m[39m
+[90m [2m❯[22m Proxy.sendEvent node_modules/vitest/dist/chunks/index.0kCJoeWi.js:[2m104:38[22m[39m
+[90m [2m❯[22m node_modules/vitest/dist/chunks/cli-api.D48wY175.js:[2m6672:54[22m[39m
+[90m [2m❯[22m node_modules/vitest/dist/chunks/cli-api.D48wY175.js:[2m11695:73[22m[39m
+[90m [2m❯[22m Vitest.cancelCurrentRun node_modules/vitest/dist/chunks/cli-api.D48wY175.js:[2m11695:55[22m[39m
+[90m [2m❯[22m _keypressHandler node_modules/vitest/dist/chunks/cli-api.D48wY175.js:[2m12342:15[22m[39m
+[90m [2m❯[22m ReadStream.keypressHandler node_modules/vitest/dist/chunks/cli-api.D48wY175.js:[2m12388:9[22m[39m
+[90m [2m❯[22m ReadStream.emit node:events:[2m519:28[22m[39m
+[90m [2m❯[22m emitKeys node:internal/readline/utils:[2m370:14[22m[39m
+
+
+
+

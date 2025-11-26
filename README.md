@@ -6,6 +6,7 @@
 - maintain anonymous user sessions with cookies
 - use prisma for CRUD actions against a postgresql db
 
+## Live deployment may be at: https://where-is-waldo-api-vczk.onrender.com/n
 
 Locations of the characters:
 x, y
