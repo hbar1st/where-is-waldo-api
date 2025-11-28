@@ -37,6 +37,7 @@ export async function getSceneCharacters(id) {
         character_name: {
           select: {
             name: true,
+            icon_url: true,
           },
         },
       },

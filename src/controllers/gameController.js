@@ -81,7 +81,7 @@ export async function getSessionData(sid) {
     return sData;
   } catch (error) {
     console.error(error);
-    throw new AppError(`Failed to get the sesssion for ${sid}`);
+    throw new AppError(`Failed to get the session for ${sid}`);
   }
 }
 
@@ -111,7 +111,7 @@ export async function getCharacters(req, res) {
       res.status(200).json({
         message: "success",
         characters: characters.reduce((acc, el) => {
-          acc.push(el["character_name"].name);
+          acc.push({ name: el["character_name"].name, url: el["character_name"]["icon_url"] });
           return acc;
         }, []),
       });

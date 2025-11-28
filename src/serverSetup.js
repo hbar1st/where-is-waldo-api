@@ -28,9 +28,10 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: "*",
-    //origin: "http://localhost:3000", // or your frontend origin
-    credentials: true, // allow cookies
+    //origin: "*",
+    origin: env.CLIENT_ORIGIN,
+    credentials: true, // allow cookies,
+    allowedHeaders: ['Content-Type']
   })
 );
 

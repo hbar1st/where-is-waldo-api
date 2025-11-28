@@ -1,5 +1,4 @@
 import { app } from "../src/serverSetup";
-import { prisma } from "../src/middleware/prisma.mjs";
 
 import {
   expect,
@@ -157,9 +156,18 @@ describe("initial game setup", () => {
       expect(res.body).toEqual({
         message: "success",
         characters: expect.arrayContaining([
-          "Odlaw",
-          "Waldo",
-          "Wizard Whitebeard",
+          {
+            name: "Odlaw",
+            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763875339/Where%27s%20Waldo/odlaw.png",
+          },
+          {
+            name: "Waldo",
+            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763874393/Where%27s%20Waldo/wally.jpg",
+          },
+          {
+            name: "Wizard Whitebeard",
+            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763875403/Where%27s%20Waldo/wizard.png",
+          },
         ]),
       });
     }
@@ -455,8 +463,6 @@ describe("test answers", () => {
 
 describe("test top ten", () => {
   let agent;
-
-  
   beforeAll(async () => {
     clearGameAndSessionRows();
   });
@@ -464,16 +470,14 @@ describe("test top ten", () => {
   beforeEach(async () => {
     agent = request.agent(app);
     const route = "/game";
-    await agent
+    const res = await agent
       .get(route)
 
       .set("Accept", "application/json");
+    
+    
+    expect(res.status).toEqual(200);
   });
-
-  beforeAll(async () => {
-    clearGameAndSessionRows();
-  });
-
   
   afterAll(async () => {
     clearGameAndSessionRows();
