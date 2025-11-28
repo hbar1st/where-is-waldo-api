@@ -206,7 +206,7 @@ describe("test answers", () => {
   let agent;
 
   beforeAll(async () => {
-    clearGameAndSessionRows();
+    await clearGameAndSessionRows();
 
     agent = request.agent(app);
     const route = "/game";
@@ -218,7 +218,7 @@ describe("test answers", () => {
 
   
   afterAll(async () => {
-    clearGameAndSessionRows();
+    await clearGameAndSessionRows();
   });
 
   test("PUT /game/answer?x=0&y=0 missing character name", async () => {
@@ -464,7 +464,7 @@ describe("test answers", () => {
 describe("test top ten", () => {
   let agent;
   beforeAll(async () => {
-    clearGameAndSessionRows();
+    await clearGameAndSessionRows();
   });
 
   beforeEach(async () => {
@@ -480,7 +480,7 @@ describe("test top ten", () => {
   });
   
   afterAll(async () => {
-    clearGameAndSessionRows();
+    await clearGameAndSessionRows();
   });
 
   test.each([100, 200, 300, 400, 500, 600, 700, 800, 900, 1000])(
@@ -680,7 +680,7 @@ describe("test ongoing game", () => {
   });
 
   beforeAll(async () => {
-    clearGameAndSessionRows();
+    await clearGameAndSessionRows();
   });
 
   test("GET /game after one correct answer", async () => {
