@@ -162,11 +162,11 @@ describe("initial game setup", () => {
           },
           {
             name: "Waldo",
-            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763874393/Where%27s%20Waldo/wally.jpg",
+            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1764419380/Where%27s%20Waldo/wally.jpg",
           },
           {
             name: "Wizard Whitebeard",
-            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763875403/Where%27s%20Waldo/wizard.png",
+            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1764420240/Where%27s%20Waldo/wizard.png",
           },
         ]),
       });
