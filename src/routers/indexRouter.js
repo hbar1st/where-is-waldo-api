@@ -9,6 +9,7 @@ import {
   evaluateAnswer,
   getTopTen,
   setUsername,
+  checkSessionGameExists,
 } from "../controllers/gameController.js";
 
 import {
@@ -38,6 +39,8 @@ indexRouter.get(
   handleExpressValidationErrors,
   getCharacters
 );
+
+indexRouter.get("/resumeGame", checkSessionGameExists);
 
 indexRouter
   .route("/game")

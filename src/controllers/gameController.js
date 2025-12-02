@@ -255,13 +255,22 @@ export async function evaluateAnswer(req, res) {
   }
 }
 
+export const checkSessionGameExists = async (req, res) => {
+  const gameId = req.session.gameId;
+  if (gameId) {
+    res.status(200).json({ message: "true" });
+  } else {
+    res.status(200).json({ message: "false"});
+  }
+};
+
 export async function getTopTen(req, res) {
   const sceneId = req.params.id;
   try {
     const topTen = await dbGetTopTen(sceneId);
     if (topTen) {
       console.log(topTen);
-      res.status(200).json({ message: "Success", topTen });
+      res.status(200).json({ message: "Success", id: req.session.gameId, topTen });
     } else {
       throw new AppError("Failed to get the top ten for the scene");
     }

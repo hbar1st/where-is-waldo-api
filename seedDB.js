@@ -24,7 +24,7 @@ async function seed() {
     res &&
     (await pool.query(`insert into character_name (character, name, icon_url) 
       values ('ODLAW', 'Odlaw', 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763875339/Where%27s%20Waldo/odlaw.png'),
-      ('WALDO', 'Waldo','https://res.cloudinary.com/hbrwdfccc/image/upload/v1764419380/Where%27s%20Waldo/wally.jpg'),
+      ('WALDO', 'Waldo','https://res.cloudinary.com/hbrwdfccc/image/upload/v1764635698/Where%27s%20Waldo/wally_e_background_removal_f_png.png'),
       ('WIZARD_WHITEBEARD', 'Wizard Whitebeard','https://res.cloudinary.com/hbrwdfccc/image/upload/v1764420240/Where%27s%20Waldo/wizard.png') returning name`));
                                                  
   const res2 =

@@ -162,7 +162,7 @@ describe("initial game setup", () => {
           },
           {
             name: "Waldo",
-            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1764419380/Where%27s%20Waldo/wally.jpg",
+            url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1764635698/Where%27s%20Waldo/wally_e_background_removal_f_png.png",
           },
           {
             name: "Wizard Whitebeard",
@@ -216,7 +216,6 @@ describe("test answers", () => {
       .set("Accept", "application/json");
   });
 
-  
   afterAll(async () => {
     await clearGameAndSessionRows();
   });
@@ -474,11 +473,10 @@ describe("test top ten", () => {
       .get(route)
 
       .set("Accept", "application/json");
-    
-    
+
     expect(res.status).toEqual(200);
   });
-  
+
   afterAll(async () => {
     await clearGameAndSessionRows();
   });
@@ -549,6 +547,7 @@ describe("test top ten", () => {
 
       expect(topTen.status).toEqual(200);
       expect(topTen.body).toHaveProperty("topTen");
+      expect(topTen.body).toHaveProperty("id");
       expect(topTen.body.topTen.length).toBeGreaterThanOrEqual(1);
       const topTenUsernames = [];
 
@@ -794,3 +793,34 @@ test("POST /game - game id invalid", async () => {
     "Failed to find the gameId in the session"
   );
 });
+
+test("GET /resumeGame - game session doesn't exist", async () => {
+  const game = await request(app)
+    .get("/resumeGame")
+    .set("Accept", "application/json");
+
+  expect(game.status).toEqual(200);
+  expect(game.body.message).toContain("false");
+  
+  await clearGameAndSessionRows();
+});
+
+
+describe("same session resumption", () => {
+  
+  const agent = request.agent(app);
+
+  test.only("GET /resumeGame - game session exists", async () => {
+    const route = "/game";
+    const res = await agent.get(route);
+
+    const resume = await agent
+      .get("/resumeGame")
+      .set("Accept", "application/json");
+
+    expect(resume.status).toEqual(200);
+    expect(resume.body.message).toContain("true");
+
+    await clearGameAndSessionRows();
+  });
+})
