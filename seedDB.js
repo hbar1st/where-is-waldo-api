@@ -31,9 +31,9 @@ async function seed() {
     res1 &&
     (await pool.query(
       `insert into answer (scene_id, character, location_x, location_y) 
-      values (${sceneId}, 'ODLAW', 0.07, 24.82),
-      (${sceneId}, 'WALDO', 10.47, 25.12),
-      (${sceneId}, 'WIZARD_WHITEBEARD', 48.09, 20.6) returning scene_id`
+      values (${sceneId}, 'ODLAW', 6.87, 68.55),
+      (${sceneId}, 'WALDO', 40.45, 62.17),
+      (${sceneId}, 'WIZARD_WHITEBEARD', 77.86, 57.39) returning scene_id`
     ));
 
   return res2;

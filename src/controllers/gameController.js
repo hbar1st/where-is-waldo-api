@@ -312,7 +312,7 @@ function inRange(correctAnswer, userAnswer) {
   console.log("in inRange: ", correctAnswer, userAnswer);
   const diff = Math.abs(correctAnswer - userAnswer).toFixed(2);
   console.log("the diff is: ", diff);
-  return diff <= 0.01;
+  return diff < 5;
 }
 
 function checkGameAnswers(answerArr, value) {

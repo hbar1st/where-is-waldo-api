@@ -8,11 +8,13 @@
 
 ## Live deployment may be at: https://where-is-waldo-api-vczk.onrender.com/
 
-Locations of the characters:
+Locations of the characters (percentages from top left):
 x, y
-1231, 346 (wizard)
-268, 422 (waldo)
-177, 417 (odlaw) 
+(wizard), normalized value is x=77.86 y=57.39
+(waldo), normalized value is x=40.45 y=62.17
+(odlaw), normalized value is x=6.87 y=68.55%
+
+# Note: the normalized value is the x/y co-ordination value _within the scope of the scene_ divided by the *current* width or height respectively
 
 Routes supported by this api:
 GET /                      gives a short description
