@@ -28,10 +28,10 @@ app.use(express.json());
 
 app.use(
   cors({
-    //origin: "*",
     origin: env.CLIENT_ORIGIN,
     credentials: true, // allow cookies,
-    allowedHeaders: ['Content-Type']
+    allowedHeaders: ["Content-Type","Authorization"],
+    methods: ["GET", "POST", "PUT", "OPTIONS"],
   })
 );
 
@@ -42,7 +42,7 @@ app.use(
       name: "hbar1st-waldo.sid",
       httpOnly: true,
       secure: env.NODE_ENV === "production" ? true : false,
-      sameSite: env.NODE_ENV === "production"? "none" : "strict", // required for cross-origin cookies
+      sameSite: env.NODE_ENV === "production" ? "none" : "strict", // required for cross-origin cookies
       maxAge: 7 * 24 * 60 * 60 * 1000, // ms
     },
     secret: env.SESSION_SECRET,
