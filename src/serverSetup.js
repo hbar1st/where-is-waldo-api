@@ -23,6 +23,12 @@ if (!env.SESSION_SECRET) {
 
 const app = express();
 
+if (env.NODE_ENV === "production") {
+  console.log("This is a production environment");
+
+  app.set("trust proxy", 1); // trust first proxy
+}
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -41,7 +47,7 @@ app.use(
     cookie: {
       name: "hbar1st-waldo.sid",
       httpOnly: true,
-      secure: env.NODE_ENV === "production" ? true : false,
+      secure: env.NODE_ENV === "production",
       sameSite: env.NODE_ENV === "production" ? "none" : "strict", // required for cross-origin cookies
       maxAge: 7 * 24 * 60 * 60 * 1000, // ms
     },
