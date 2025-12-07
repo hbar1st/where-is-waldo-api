@@ -561,27 +561,27 @@ describe("test top ten", () => {
     }
   );
 
-    test("GET /game/answer after incorrect answer", async () => {
-      const res1 = await agent
-        .put("/game/answer")
-        .query({ x: 9, y: 9, character: "Odlaw" })
-        .set("Accept", "application/json");
+  test("GET /game/answer after incorrect answer", async () => {
+    const res1 = await agent
+      .put("/game/answer")
+      .query({ x: 9, y: 9, character: "Odlaw" })
+      .set("Accept", "application/json");
 
-      expect(res1.status).toEqual(200); //incorrect answer
+    expect(res1.status).toEqual(200); //incorrect answer
 
-      const getRes = await agent
-        .get("/game/answer")
-        .set("Accept", "application/json");
+    const getRes = await agent
+      .get("/game/answer")
+      .set("Accept", "application/json");
 
-      expect(getRes.status).toEqual(200);
-      expect(getRes.body).toBeDefined();
-      expect(getRes.body.gameAnswers).toBeDefined();
-      expect(getRes.body).toEqual({
-        message: "success",
-        gameAnswers: expect.arrayContaining([]),
-      });
+    expect(getRes.status).toEqual(200);
+    expect(getRes.body).toBeDefined();
+    expect(getRes.body.gameAnswers).toBeDefined();
+    expect(getRes.body).toEqual({
+      message: "success",
+      gameAnswers: expect.arrayContaining([]),
     });
-  
+  });
+
   test("GET /game/answer after one answer logged", async () => {
     const res1 = await agent
       .put("/game/answer")
@@ -592,8 +592,8 @@ describe("test top ten", () => {
 
     const getRes = await agent
       .get("/game/answer")
-      .set("Accept", "application/json")
-    
+      .set("Accept", "application/json");
+
     expect(getRes.status).toEqual(200);
     expect(getRes.body).toBeDefined();
     expect(getRes.body.gameAnswers).toBeDefined();
@@ -603,8 +603,104 @@ describe("test top ten", () => {
         { x: 6.87, y: 68.55, name: "Odlaw" },
       ]),
     });
-  })
-    
+  });
+
+  test("PUT /game/answer trying to put after all correct answers were already found", async () => {
+    const res1 = await agent
+      .put("/game/answer")
+      .query({ x: 6.87, y: 68.55, character: "Odlaw" })
+      .set("Accept", "application/json");
+
+    expect(res1.status).toEqual(201); //first correct answer
+
+    const res2 = await agent
+      .put("/game/answer")
+      .query({ x: 40.45, y: 62.17, character: "Waldo" })
+      .set("Accept", "application/json");
+
+    expect(res2.status).toEqual(201); //second correct answer
+
+    const res3 = await agent
+      .put("/game/answer")
+      .query({ x: 77.86, y: 57.39, character: "Wizard Whitebeard" })
+      .set("Accept", "application/json");
+
+    expect(res3.status).toEqual(201);
+    expect(res3.body).toHaveProperty("end_time"); // this is the last needed answer
+
+    // now try to add another answer (duplicate one)
+    const res4 = await agent
+      .put("/game/answer")  // try to enter a fourth correct answer with slightly different values
+      .query({ x: 77, y: 57, character: "Wizard Whitebeard" })
+      .set("Accept", "application/json");
+
+    expect(res4.status).toEqual(201);
+
+    // check the list of answers is still 3, not 4, and new answer is there overwriting the old one
+        const getRes = await agent
+          .get("/game/answer")
+          .set("Accept", "application/json");
+
+        expect(getRes.status).toEqual(200);
+        expect(getRes.body).toBeDefined();
+        expect(getRes.body.gameAnswers).toBeDefined();
+        expect(getRes.body).toEqual({
+          message: "success",
+          gameAnswers: expect.arrayContaining([
+            { x: 77, y: 57, name: "Wizard Whitebeard" },
+          ]),
+        });
+        expect(getRes.body.gameAnswers.length).toEqual(3)
+  });
+
+  test("PUT /game/answer trying to put invalid answer after all correct answers were already found", async () => {
+    const res1 = await agent
+      .put("/game/answer")
+      .query({ x: 6.87, y: 68.55, character: "Odlaw" })
+      .set("Accept", "application/json");
+
+    expect(res1.status).toEqual(201); //first correct answer
+
+    const res2 = await agent
+      .put("/game/answer")
+      .query({ x: 40.45, y: 62.17, character: "Waldo" })
+      .set("Accept", "application/json");
+
+    expect(res2.status).toEqual(201); //second correct answer
+
+    const res3 = await agent
+      .put("/game/answer")
+      .query({ x: 77.86, y: 57.39, character: "Wizard Whitebeard" })
+      .set("Accept", "application/json");
+
+    expect(res3.status).toEqual(201);
+    expect(res3.body).toHaveProperty("end_time"); // this is the last needed answer
+
+    // now try to add another answer (duplicate one)
+    const res4 = await agent
+      .put("/game/answer") // try to enter a fourth correct answer with incorrect
+      .query({ x: 0, y: 57, character: "Wizard Whitebeard" })
+      .set("Accept", "application/json");
+
+    expect(res4.status).toEqual(200);
+
+    // check the list of answers is still 3, not 4, and new answer is not there
+    const getRes = await agent
+      .get("/game/answer")
+      .set("Accept", "application/json");
+
+    expect(getRes.status).toEqual(200);
+    expect(getRes.body).toBeDefined();
+    expect(getRes.body.gameAnswers).toBeDefined();
+    expect(getRes.body).toEqual({
+      message: "success",
+      gameAnswers: expect.arrayContaining([
+        { x: 77.86, y: 57.39, name: "Wizard Whitebeard" },
+      ]),
+    });
+    expect(getRes.body.gameAnswers.length).toEqual(3);
+  });
+
   test("PUT /game/answer not in top ten", async () => {
     const res1 = await agent
       .put("/game/answer")
@@ -845,13 +941,11 @@ test("GET /resumeGame - game session doesn't exist", async () => {
 
   expect(game.status).toEqual(200);
   expect(game.body.message).toContain("false");
-  
+
   await clearGameAndSessionRows();
 });
 
-
 describe("same session resumption", () => {
-  
   const agent = request.agent(app);
 
   test("GET /resumeGame - game session exists", async () => {
@@ -867,4 +961,4 @@ describe("same session resumption", () => {
 
     await clearGameAndSessionRows();
   });
-})
+});

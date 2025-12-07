@@ -48,5 +48,3 @@ If the elapsed time is in the top ten scores, the user's score can be saved.
 
 POST /game  The client should call this if the user agrees to provide a name (the name is only recorded if the score is in the top ten list)
 Note: you must not pass multi-part form data to this api. It is only read as urlencoded data.
-
-//TODO add a test for what happens if someone tries to put an answer for an invalid character or a 4th answer after the expected 3 good ones.
