@@ -105,7 +105,11 @@ export const checkSessionGameId = (req, res, next) => {
 };
 
 export const checkUsername = [
-  body('username').trim().notEmpty().withMessage("username should not be blank")
-    .isString().withMessage("username should be a string")
-  .isLength({min: 1, max: 25}).withMessage("username length should be between 1 and 25 characters")
+  body('username')
+    .trim().notEmpty()
+    .withMessage("username should not be blank")
+    .isString()
+    .withMessage("username should be a string")
+    .isLength({ min: 1, max: 25 })
+    .withMessage("username length should be between 1 and 25 characters")
 ]

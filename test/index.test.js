@@ -404,7 +404,7 @@ describe("test answers", () => {
       .set("Accept", "application/json");
 
     console.log(res.body);
-    expect(res.status).toEqual(400);
+    expect(res.status).toEqual(200);
     expect(res.body).toMatchObject({
       message: "Wrong answer",
       x: "0",
@@ -424,7 +424,7 @@ describe("test answers", () => {
       .set("Accept", "application/json");
 
     console.log(res.body);
-    expect(res.status).toEqual(400);
+    expect(res.status).toEqual(200);
     expect(res.body).toMatchObject({
       message: "Wrong answer",
       x: "0.07",
@@ -449,7 +449,7 @@ describe("test answers", () => {
 
         .set("Accept", "application/json");
 
-      expect(res.status).toEqual(200);
+      expect(res.status).toEqual(201);
       expect(res.body).toMatchObject({
         message: "Correct answer",
         x: `${x}`,
@@ -489,14 +489,14 @@ describe("test top ten", () => {
         .query({ x: 6.87, y: 68.55, character: "Odlaw" })
         .set("Accept", "application/json");
 
-      expect(res1.status).toEqual(200); //first correct answer
+      expect(res1.status).toEqual(201); //first correct answer
 
       const res2 = await agent
         .put("/game/answer")
         .query({ x: 40.45, y: 62.17, character: "Waldo" })
         .set("Accept", "application/json");
 
-      expect(res2.status).toEqual(200); //second correct answer
+      expect(res2.status).toEqual(201); //second correct answer
 
       const wait = util.promisify(setTimeout);
       await wait(delay);
@@ -506,7 +506,7 @@ describe("test top ten", () => {
         .query({ x: 77.86, y: 57.39, character: "Wizard Whitebeard" })
         .set("Accept", "application/json");
 
-      expect(res3.status).toEqual(200);
+      expect(res3.status).toEqual(201);
       expect(res3.body).toMatchObject({
         message: "Correct answer",
         x: "77.86",
@@ -561,20 +561,64 @@ describe("test top ten", () => {
     }
   );
 
+    test("GET /game/answer after incorrect answer", async () => {
+      const res1 = await agent
+        .put("/game/answer")
+        .query({ x: 9, y: 9, character: "Odlaw" })
+        .set("Accept", "application/json");
+
+      expect(res1.status).toEqual(200); //incorrect answer
+
+      const getRes = await agent
+        .get("/game/answer")
+        .set("Accept", "application/json");
+
+      expect(getRes.status).toEqual(200);
+      expect(getRes.body).toBeDefined();
+      expect(getRes.body.gameAnswers).toBeDefined();
+      expect(getRes.body).toEqual({
+        message: "success",
+        gameAnswers: expect.arrayContaining([]),
+      });
+    });
+  
+  test("GET /game/answer after one answer logged", async () => {
+    const res1 = await agent
+      .put("/game/answer")
+      .query({ x: 6.87, y: 68.55, character: "Odlaw" })
+      .set("Accept", "application/json");
+
+    expect(res1.status).toEqual(201); //first correct answer
+
+    const getRes = await agent
+      .get("/game/answer")
+      .set("Accept", "application/json")
+    
+    expect(getRes.status).toEqual(200);
+    expect(getRes.body).toBeDefined();
+    expect(getRes.body.gameAnswers).toBeDefined();
+    expect(getRes.body).toEqual({
+      message: "success",
+      gameAnswers: expect.arrayContaining([
+        { x: 6.87, y: 68.55, name: "Odlaw" },
+      ]),
+    });
+  })
+    
   test("PUT /game/answer not in top ten", async () => {
     const res1 = await agent
       .put("/game/answer")
       .query({ x: 6.87, y: 68.55, character: "Odlaw" })
       .set("Accept", "application/json");
 
-    expect(res1.status).toEqual(200); //first correct answer
+    expect(res1.status).toEqual(201); //first correct answer
 
     const res2 = await agent
       .put("/game/answer")
       .query({ x: 40.45, y: 62.17, character: "Waldo" })
       .set("Accept", "application/json");
 
-    expect(res2.status).toEqual(200); //second correct answer
+    expect(res2.status).toEqual(201); //second correct answer
 
     // wait 1/4 second before ending the game
     const wait = util.promisify(setTimeout);
@@ -585,7 +629,7 @@ describe("test top ten", () => {
       .query({ x: 77.86, y: 57.39, character: "Wizard Whitebeard" })
       .set("Accept", "application/json");
 
-    expect(res3.status).toEqual(200);
+    expect(res3.status).toEqual(201);
     expect(res3.body).toMatchObject({
       message: "Correct answer",
       x: "77.86",
@@ -688,7 +732,7 @@ describe("test ongoing game", () => {
       .query({ x: 6.87, y: 68.55, character: "Odlaw" })
       .set("Accept", "application/json");
 
-    expect(res1.status).toEqual(200); //first correct answer
+    expect(res1.status).toEqual(201); //first correct answer
 
     const res = await agent
 
@@ -720,14 +764,14 @@ describe("test ongoing game", () => {
       .query({ x: 6.87, y: 68.55, character: "Odlaw" })
       .set("Accept", "application/json");
 
-    expect(res1.status).toEqual(200); //first correct answer
+    expect(res1.status).toEqual(201); //first correct answer
 
     const res2 = await agent
       .put("/game/answer")
       .query({ x: 40.45, y: 62.17, character: "Waldo" })
       .set("Accept", "application/json");
 
-    expect(res2.status).toEqual(200); //second correct answer
+    expect(res2.status).toEqual(201); //second correct answer
 
     const res = await agent
 

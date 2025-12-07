@@ -26,7 +26,7 @@ const app = express();
 if (env.NODE_ENV === "production") {
   console.log("This is a production environment");
 
-  app.set("trust proxy", 1); // trust first proxy
+  app.set("trust proxy", 1); // trust first proxy only because of deployment to Render?
 }
 
 app.use(express.urlencoded({ extended: true }));
@@ -36,8 +36,8 @@ app.use(
   cors({
     origin: env.CLIENT_ORIGIN,
     credentials: true, // allow cookies,
-    allowedHeaders: ["Content-Type","Authorization"],
-    methods: ["GET", "POST", "PUT", "OPTIONS"],
+    allowedHeaders: ["Content-Type","Authorization"], // may not need to specify Authorization
+    methods: ["GET", "POST", "PUT", "OPTIONS"], // may not need this
   })
 );
 

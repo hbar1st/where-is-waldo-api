@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getScene,
+  getGameAnswers,
   getCharacters,
   getGame,
   setupGame,
@@ -52,14 +53,16 @@ indexRouter
     setUsername
   );
 
-indexRouter.put(
-  "/game/answer",
-  checkSessionGameId,
-  checkCoordinates,
-  checkCharacter,
-  handleExpressValidationErrors,
-  evaluateAnswer
-);
+indexRouter
+  .route("/game/answer")
+  .get(checkSessionGameId, getGameAnswers)
+  .put(
+    checkSessionGameId,
+    checkCoordinates,
+    checkCharacter,
+    handleExpressValidationErrors,
+    evaluateAnswer
+  );
 
 indexRouter.get(
   "/scene/:id/topten",

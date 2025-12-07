@@ -124,10 +124,33 @@ export async function getCharacters(req, res) {
   }
 }
 
+export async function getGameAnswers(req, res) {
+  console.log("in getGameAnswers: ", req.session.id)
+  
+  try {
+    // extract the game_id from the session row
+    let gameId = req.session.gameId;
+    if (gameId) {
+      console.log("found a game id: ", gameId);
+      const game = await dbGetGame(gameId);
+
+      // game.gameAnswers: [ { location_x: 0.07, location_y: 24.82, character_name:{name: 'ODLAW'} } ]
+      const answers = game.gameAnswers.map(el => ({ x: el.location_x, y: el.location_y, name: el["character_name"].name}))
+      return res.status(200).json({ message: "success", gameAnswers: answers });
+      
+    } else {
+      throw new AppError(
+        `failed to get a game id from the current session: ${req.session.id}`
+      );
+    }
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
 export async function getGame(req, res) {
   console.log("in getGame: ", req.session.id);
 
-  const sid = req.session.id;
   try {
     // extract the game_id from the session row
     let gameId = req.session.gameId;
@@ -238,15 +261,15 @@ export async function evaluateAnswer(req, res) {
             resultObj.inTopTen = false;
           }
         }
-        res.status(200).json(resultObj);
+        res.status(201).json(resultObj);
       } else {
         res
-          .status(400)
+          .status(200)
           .json({ message: "Wrong answer", x, y, character: characterName });
       }
     } else {
       res
-        .status(400)
+        .status(200)
         .json({ message: "Wrong answer", x, y, character: characterName });
     }
   } catch (error) {

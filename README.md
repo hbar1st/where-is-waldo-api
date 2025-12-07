@@ -38,9 +38,15 @@ This is the main route that a client app would use to start a game as this route
 
 GET /scene/:id/topten      returns the top ten players and their game times for the scene being played plus the current game id is returned to help the client find the current user in the list.
 
-PUT /game/answer?x=X&y=Y&character="Waldo"    (x is normalized percentage value from the left, and y is normalized percentage value from the top. Both are of no more than 2 decimal precison. The origin is top left. Correct answers are accurate to a degree of 0.01 from the correct value.) The character name is one of the values returned from GET /scene/:id/characters
+GET /game/answers       returns the list of correct answers logged so far in this game in the format of [{x,y,name}]
 
-If the answer is correct, and there are no more characters to be found, the game ends and an elapsed time is calculated. If the elapsed time is in the top ten scores, the user's score can be saved.
+PUT /game/answer?x=X&y=Y&character="Waldo"    (x is normalized percentage value from the left, and y is normalized percentage value from the top. Both are of no more than 2 decimal precison. The origin is top left. Correct answers are accurate to a degree of less than 5.0% deviation from the correct value.) The character name is one of the values returned from GET /scene/:id/characters
+
+If the answer is correct, and there are no more characters to be found, the game ends and an elapsed time is calculated. 
+If the elapsed time is in the top ten scores, the user's score can be saved.
 (if the same game is to be replayed, the client should delete the cookie before sending a new GET /game request to restart the game)
 
 POST /game  The client should call this if the user agrees to provide a name (the name is only recorded if the score is in the top ten list)
+Note: you must not pass multi-part form data to this api. It is only read as urlencoded data.
+
+//TODO add a test for what happens if someone tries to put an answer for an invalid character or a 4th answer after the expected 3 good ones.
