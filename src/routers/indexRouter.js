@@ -46,7 +46,7 @@ indexRouter.get("/resumeGame", checkSessionGameExists);
 indexRouter
   .route("/game")
   .get(setupGame, getGame)
-  .post(
+  .put(
     checkSessionGameId,
     checkUsername,
     handleExpressValidationErrors,

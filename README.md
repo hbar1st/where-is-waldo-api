@@ -46,5 +46,6 @@ If the answer is correct, and there are no more characters to be found, the game
 If the elapsed time is in the top ten scores, the user's score can be saved.
 (if the same game is to be replayed, the client should delete the cookie before sending a new GET /game request to restart the game)
 
-POST /game  The client should call this if the user agrees to provide a name (the name is only recorded if the score is in the top ten list)
+PUT /game  The client should call this if the user agrees to provide a name (the name is only recorded if the score is in the top ten list)
 Note: you must not pass multi-part form data to this api. It is only read as urlencoded data.
+

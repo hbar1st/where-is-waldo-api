@@ -519,7 +519,7 @@ describe("test top ten", () => {
       // test trying to record username since elapsed_time is in top ten
       const username = `bestOfTheBest-${delay}`;
       const game = await agent
-        .post("/game")
+        .put("/game")
 
         .set("Accept", "application/json")
 
@@ -737,7 +737,7 @@ describe("test top ten", () => {
 
     // test trying to record username when he's not in top ten
     const game = await agent
-      .post("/game")
+      .put("/game")
 
       .set("Accept", "application/json")
 
@@ -772,7 +772,7 @@ describe("test top ten", () => {
 
   test("POST /game - username blank in request body", async () => {
     const game = await agent
-      .post("/game")
+      .put("/game")
 
       .set("Accept", "application/json")
 
@@ -796,7 +796,7 @@ describe("test top ten", () => {
   });
 
   test("POST /game - username not found in request body", async () => {
-    const game = await agent.post("/game").set("Accept", "application/json");
+    const game = await agent.put("/game").set("Accept", "application/json");
 
     expect(game.status).toEqual(400);
     expect(game.body.message).toEqual(
@@ -923,7 +923,7 @@ describe("test ongoing game", () => {
 
 test("POST /game - game id invalid", async () => {
   const game = await request(app)
-    .post("/game")
+    .put("/game")
     .set("Accept", "application/json")
 
     .send({ username: "hacker" });
