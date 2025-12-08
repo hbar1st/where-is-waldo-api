@@ -20,7 +20,7 @@ x, y
 
 # Note: the normalized value is the x/y co-ordination value _within the scope of the scene_ divided by the *current* width or height respectively
 
-Routes supported by this api:
+Routes supported by this api: (Note, this api doesn't follow REST practices)
 
 GET /                      gives a short description
 

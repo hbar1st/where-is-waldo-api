@@ -54,7 +54,7 @@ indexRouter
   );
 
 indexRouter
-  .route("/game/answer")
+  .route(["/game/answer", "/game/answers"])
   .get(checkSessionGameId, getGameAnswers)
   .put(
     checkSessionGameId,
