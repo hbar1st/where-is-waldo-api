@@ -48,6 +48,14 @@ export async function getSceneCharacters(id) {
   }
 }
 
+export async function getGameElapsedTime(gameId) {
+  console.log("in getGameElapsedTime: ", gameId);
+  const time = await prisma.$queryRawUnsafe(`
+    SELECT CAST(end_time - start_time AS Text) AS elapsed_time
+    FROM game WHERE id=${Number(gameId)};`)
+  return time;
+}
+
 export async function getTopTen(sceneId) {
   console.log("in getTopTen: ", sceneId)
   const topTen = await prisma.$queryRawUnsafe(

@@ -548,6 +548,7 @@ describe("test top ten", () => {
       expect(topTen.status).toEqual(200);
       expect(topTen.body).toHaveProperty("topTen");
       expect(topTen.body).toHaveProperty("id");
+      expect(topTen.body).toHaveProperty("elapsed_time"); // this is actually the elapsed time
       expect(topTen.body.topTen.length).toBeGreaterThanOrEqual(1);
       const topTenUsernames = [];
 

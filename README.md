@@ -36,7 +36,7 @@ If the user doesn't have a valid game id in a session cookie, then they will get
 This is the main route that a client app would use to start a game as this route returns everything you need to get started (or complete an ongoing game)
 
 
-GET /scene/:id/topten      returns the top ten players and their game times for the scene being played plus the current game id is returned to help the client find the current user in the list.
+GET /scene/:id/topten      returns the top ten players and their game times for the scene being played plus the current game id and elapsed_time is returned to help the client find the current user in the list.
 
 GET /game/answers       returns the list of correct answers logged so far in this game in the format of [{x,y,name}]
 

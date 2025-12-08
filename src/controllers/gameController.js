@@ -17,6 +17,7 @@ const {
   inTopTen,
   getTopTen: dbGetTopTen,
   setUsername: dbSetUsername,
+  getGameElapsedTime,
 } = gameSetup;
 
 /**
@@ -212,8 +213,8 @@ export async function evaluateAnswer(req, res) {
     const answerRow = await getAnswer(sceneId.scene_id, characterKey.character);
     if (answerRow) {
       if (
-        inRange(answerRow.location_x, x) &&
-        inRange(answerRow.location_y, y)
+        inRange(answerRow.location_x, x, .7) &&
+        inRange(answerRow.location_y, y, 1.14)
       ) {
         // log the answer in the game_answer table and get the count of all answers found
         const gameAnswer = await setGameAnswer(
@@ -287,13 +288,30 @@ export const checkSessionGameExists = async (req, res) => {
   }
 };
 
+// returns the top ten and the current game id and the elapsed_time for that id
 export async function getTopTen(req, res) {
   const sceneId = req.params.id;
   try {
     const topTen = await dbGetTopTen(sceneId);
     if (topTen) {
       console.log(topTen);
-      res.status(200).json({ message: "Success", id: req.session.gameId, topTen });
+      let gameTime = null;
+      if (req.session.gameId) {
+        gameTime = await getGameElapsedTime(req.session.gameId);
+      } else {
+        gameTime = [{elapsed_time: null}]
+      }
+      if (gameTime) {
+        // calculate the elapsed time
+        console.log(gameTime)
+        const elapsed_time = gameTime[0].elapsed_time;
+        console.log("found elapsed_time of current game: ", elapsed_time, gameTime)
+        res
+          .status(200)
+          .json({ message: "Success", id: req.session.gameId, elapsed_time, topTen });
+      } else {
+        throw new AppError("Failed to get the current game values")
+      }
     } else {
       throw new AppError("Failed to get the top ten for the scene");
     }
@@ -331,11 +349,11 @@ export function calculateElapsedTime(startTime, endTime) {
   return new Date(endTime).valueOf() - new Date(startTime).valueOf();
 }
 
-function inRange(correctAnswer, userAnswer) {
+function inRange(correctAnswer, userAnswer, tolerance) {
   console.log("in inRange: ", correctAnswer, userAnswer);
   const diff = Math.abs(correctAnswer - userAnswer).toFixed(2);
   console.log("the diff is: ", diff);
-  return diff < 5;
+  return diff < tolerance; 
 }
 
 function checkGameAnswers(answerArr, value) {
