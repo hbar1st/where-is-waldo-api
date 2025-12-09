@@ -99,6 +99,7 @@ export async function getAllScenes(req, res) {
   try {
     const scenes = await dbGetAllScenes();
     if (scenes) {
+      console.log("scenes: ", scenes)
       res.status(200).json({scenes})
     }
   } catch (error) {

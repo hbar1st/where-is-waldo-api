@@ -52,6 +52,7 @@ model Game_Answer {
 model Scene {
   id      Int      @id @default(autoincrement())
   url     String   @unique
+  level   Int      @default(1)
   answers Answer[]
   games   Game[]
 

@@ -235,6 +235,7 @@ describe("initial game setup", () => {
     expect(res.body.game.scene).toHaveProperty("characters");
     expect(res.body.game.scene).toEqual({
       id: expect.toSatisfy((input) => Number.isInteger(input)),
+      level: 2,
       url: expect.stringMatching(/^https:\/\/.*\.jpg/),
       characters: expect.arrayContaining([
         "Odlaw",
@@ -557,7 +558,7 @@ describe("test top ten", () => {
         character: "Wizard Whitebeard",
         inTopTen: true,
       });
-      expect(res3.body).toHaveProperty("end_time");
+      expect(res3.body).toHaveProperty("elapsed_time");
 
       // test trying to record username since elapsed_time is in top ten
       const username = `bestOfTheBest-${delay}`;
@@ -662,7 +663,7 @@ describe("test top ten", () => {
       .set("Accept", "application/json");
 
     expect(res3.status).toEqual(201);
-    expect(res3.body).toHaveProperty("end_time"); // this is the last needed answer
+    expect(res3.body).toHaveProperty("elapsed_time"); // this is the last needed answer
 
     // now try to add another answer (duplicate one)
     const res4 = await agent
@@ -710,7 +711,7 @@ describe("test top ten", () => {
       .set("Accept", "application/json");
 
     expect(res3.status).toEqual(201);
-    expect(res3.body).toHaveProperty("end_time"); // this is the last needed answer
+    expect(res3.body).toHaveProperty("elapsed_time"); // this is the last needed answer
 
     // now try to add another answer (duplicate one)
     const res4 = await agent
@@ -769,7 +770,7 @@ describe("test top ten", () => {
       character: "Wizard Whitebeard",
       inTopTen: false,
     });
-    expect(res3.body).toHaveProperty("end_time");
+    expect(res3.body).toHaveProperty("elapsed_time");
 
     // test trying to record username when he's not in top ten
     const game = await agent
@@ -890,6 +891,7 @@ describe("test ongoing game", () => {
     expect(res.body.game.scene.characters).toHaveLength(2);
     expect(res.body.game.scene).toEqual({
       id: expect.toSatisfy((input) => Number.isInteger(input)),
+      level: 2,
       url: expect.stringMatching(/^https:\/\/.*\.jpg/),
       characters: expect.arrayContaining(["Waldo", "Wizard Whitebeard"]),
     });
@@ -929,6 +931,7 @@ describe("test ongoing game", () => {
     expect(res.body.game.scene.characters).toHaveLength(1);
     expect(res.body.game.scene).toEqual({
       id: expect.toSatisfy((input) => Number.isInteger(input)),
+      level: 2, 
       url: expect.stringMatching(/^https:\/\/.*\.jpg/),
       characters: expect.arrayContaining(["Wizard Whitebeard"]),
     });
@@ -1066,7 +1069,7 @@ describe("test player in top ten for two scenes", () => {
     await clearGameAndSessionRows();
   });
 
-  test.only("PUT /scene/%i/game/answer all characters found & top ten for scene number %i where i is in set [1,2]", async () => {
+  test("PUT /scene/%i/game/answer all characters found & top ten for scene number %i where i is in set [1,2]", async () => {
     const res1 = await agent
       .put(`/scene/1/game/answer`)
       .query({ x: 6.87, y: 68.55, character: "Odlaw" })

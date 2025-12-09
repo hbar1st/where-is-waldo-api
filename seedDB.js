@@ -13,8 +13,8 @@ const pool = new Pool({
 async function seedFirst() {
   // set up the available scene
   const res = await pool.query(
-    `insert into scene (url)
-    values ('https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg') returning (id);`
+    `insert into scene (level, url)
+    values (2, 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg') returning (id);`
   );
 
   const sceneId = res.rows[0].id;
@@ -42,8 +42,8 @@ async function seedFirst() {
 async function seedSecond() {
   // set up the available scene
   const res = await pool.query(
-    `insert into scene (url)
-    values ('https://res.cloudinary.com/hbrwdfccc/image/upload/v1765246758/Where%27s%20Waldo/candy-scene-wally-odlaw.jpg') returning (id);`
+    `insert into scene (level, url)
+    values (1, 'https://res.cloudinary.com/hbrwdfccc/image/upload/v1765246758/Where%27s%20Waldo/candy-scene-wally-odlaw.jpg') returning (id);`
   );
 
   const sceneId = res.rows[0].id;
