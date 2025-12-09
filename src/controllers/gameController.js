@@ -337,7 +337,7 @@ export async function getTopTen(req, res) {
           .status(200)
           .json({
             message: "Success",
-            id: req.session.gameIds[sceneId],
+            id: sceneId,
             elapsed_time,
             topTen,
           });

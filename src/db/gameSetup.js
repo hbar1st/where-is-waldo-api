@@ -28,10 +28,9 @@ export async function getScene(sceneId) {
 export async function getAllScenes() {
   console.log("in getAllScenes");
   const scenes = await prisma.scene.findMany({
-    select: {
-      id: true,
-      url: true,
-    },
+    orderBy: {
+      level: 'asc'
+    }
   });
   return scenes;
 }
