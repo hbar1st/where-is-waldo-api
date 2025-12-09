@@ -10,7 +10,7 @@ const pool = new Pool({
   connectionString,
 });
 
-async function seed() {
+async function seedFirst() {
   // set up the available scene
   const res = await pool.query(
     `insert into scene (url)
@@ -39,10 +39,33 @@ async function seed() {
   return res2;
 }
 
-console.log("\nBegin table seeding operation.\n");
-const res = await seed(); 
+async function seedSecond() {
+  // set up the available scene
+  const res = await pool.query(
+    `insert into scene (url)
+    values ('https://res.cloudinary.com/hbrwdfccc/image/upload/v1765246758/Where%27s%20Waldo/candy-scene-wally-odlaw.jpg') returning (id);`
+  );
 
-if (res) {
+  const sceneId = res.rows[0].id;
+
+  // characters already setup in seedFirst
+  
+  const res2 =
+    res1 &&
+    (await pool.query(
+      `insert into answer (scene_id, character, location_x, location_y) 
+      values (${sceneId}, 'ODLAW', 6.87, 68.55),
+      (${sceneId}, 'WALDO', 40.45, 62.17) returning scene_id`
+    ));
+
+  return res2;
+}
+console.log("\nBegin table seeding operation.\n");
+const res1 = await seedFirst(); 
+
+const res2 = await seedSecond(); 
+
+if (res1 && res2) {
   console.log("All tables seeded successfully.");
   await pool.end()
 }

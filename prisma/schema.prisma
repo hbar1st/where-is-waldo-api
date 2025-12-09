@@ -33,6 +33,7 @@ model Game {
   gameAnswers Game_Answer[]
 
   @@map(name: "game")
+  @@unique([id, scene_id])
 }
 
 model Game_Answer {

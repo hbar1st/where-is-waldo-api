@@ -1,15 +1,39 @@
 import { prisma } from "../../src/middleware/prisma.mjs";
 
-// we only have one scene to play with, but maybe later on we can add more and return different ones?
-export async function getScene() {
-  console.log("in getScene");
-  const scene = await prisma.scene.findFirst({
+// returns the first scene if sceneId is null
+export async function getScene(sceneId) {
+  console.log("in getScene: ", sceneId);
+  if (sceneId) {
+    const scene = await prisma.scene.findUnique({
+      select: {
+        id: true,
+        url: true,
+      },
+      where: {
+        id: Number(sceneId),
+      },
+    });
+    return scene;
+  } else {
+    const scene = await prisma.scene.findFirst({
+      select: {
+        id: true,
+        url: true,
+      },
+    });
+    return scene;
+  }
+}
+
+export async function getAllScenes() {
+  console.log("in getAllScenes");
+  const scenes = await prisma.scene.findMany({
     select: {
       id: true,
       url: true,
     },
   });
-  return scene;
+  return scenes;
 }
 
 export async function getSceneById(id) {
@@ -52,12 +76,12 @@ export async function getGameElapsedTime(gameId) {
   console.log("in getGameElapsedTime: ", gameId);
   const time = await prisma.$queryRawUnsafe(`
     SELECT CAST(end_time - start_time AS Text) AS elapsed_time
-    FROM game WHERE id=${Number(gameId)};`)
+    FROM game WHERE id=${Number(gameId)};`);
   return time;
 }
 
 export async function getTopTen(sceneId) {
-  console.log("in getTopTen: ", sceneId)
+  console.log("in getTopTen: ", sceneId);
   const topTen = await prisma.$queryRawUnsafe(
     `SELECT id,username, CAST(end_time - start_time AS Text) AS elapsed_time 
   FROM game WHERE scene_id=${Number(sceneId)}
@@ -68,14 +92,16 @@ export async function getTopTen(sceneId) {
   return topTen;
 }
 
-export async function inTopTen(gameId) {
-  console.log("in inTopTen: ", gameId);
+export async function inTopTen(sceneId, gameId) {
+  console.log("in inTopTen: ", sceneId, gameId);
 
   const result = await prisma.$queryRawUnsafe(
     `SELECT *
 FROM (
-  SELECT id, CAST(end_time - start_time AS Text) AS elapsed_time 
+  SELECT id, scene_id, CAST(end_time - start_time AS Text) AS elapsed_time 
   FROM game
+  GROUP BY id, scene_id
+  HAVING scene_id = ${sceneId}
   ORDER BY elapsed_time ASC
   LIMIT 10
 ) AS top10
@@ -94,7 +120,7 @@ export async function endGame(game_id) {
       end_time: new Date().toISOString(),
     },
   });
-  
+
   return game;
 }
 
@@ -134,6 +160,42 @@ export async function getAllSessions() {
   return sessions;
 }
 
+export async function getGameByScene(gameIds, sceneId) {
+  console.log("in getGameByScene: ", gameIds, sceneId);
+  const game = await prisma.game.findUnique({
+    where: {
+      id: Number(id),
+    },
+    include: {
+      scene: {
+        include: {
+          answers: {
+            select: {
+              character_name: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      gameAnswers: {
+        select: {
+          location_x: true,
+          location_y: true,
+          character_name: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+  return game;
+}
+
 export async function getGame(id) {
   console.log("in getGame: ", id);
   const game = await prisma.game.findUnique({
@@ -160,10 +222,10 @@ export async function getGame(id) {
           location_y: true,
           character_name: {
             select: {
-              name: true
-            }
-          }
-        }
+              name: true,
+            },
+          },
+        },
       },
     },
   });
@@ -259,11 +321,11 @@ export async function setUsername(gameId, username) {
   console.log("in setUsername: ", gameId, username);
   const game = await prisma.game.update({
     where: {
-      id: Number(gameId)
-    }, 
+      id: Number(gameId),
+    },
     data: {
-      username
-    }
-  })
+      username,
+    },
+  });
   return game;
 }

@@ -3,10 +3,10 @@ import {
   getScene,
   getGameAnswers,
   getCharacters,
+  getAllScenes,
   getGame,
   setupGame,
   getSessionData,
-  getGameID,
   evaluateAnswer,
   getTopTen,
   setUsername,
@@ -31,8 +31,18 @@ indexRouter.get("/", (req, res) => {
   });
 });
 
-// getting a scene also starts a game (and the start time is recorded)
-indexRouter.get("/scene", getScene);
+// getting a list of scenes 
+indexRouter.get("/scene", getAllScenes);
+
+indexRouter.get("/scene/:id", checkSceneId, handleExpressValidationErrors, getScene);
+
+indexRouter.get(
+  "/scene/:id/game",
+  checkSceneId,
+  handleExpressValidationErrors,
+  setupGame,
+  getGame
+);
 
 indexRouter.get(
   "/scene/:id/characters",
@@ -41,12 +51,20 @@ indexRouter.get(
   getCharacters
 );
 
-indexRouter.get("/resumeGame", checkSessionGameExists);
+indexRouter.get(
+  "/scene/:id/resumeGame",
+  checkSceneId,
+  handleExpressValidationErrors,
+  checkSessionGameExists
+);
 
+// call get /game starts the timer on the game
 indexRouter
-  .route("/game")
-  .get(setupGame, getGame)
+  .route("/scene/:id/game")
+  .get(checkSceneId, handleExpressValidationErrors, setupGame, getGame)
   .put(
+    checkSceneId,
+    handleExpressValidationErrors,
     checkSessionGameId,
     checkUsername,
     handleExpressValidationErrors,
@@ -54,9 +72,16 @@ indexRouter
   );
 
 indexRouter
-  .route(["/game/answer", "/game/answers"])
-  .get(checkSessionGameId, getGameAnswers)
+  .route(["/scene/:id/game/answer", "/scene/:id/game/answers"])
+  .get(
+    checkSceneId,
+    handleExpressValidationErrors,
+    checkSessionGameId,
+    getGameAnswers
+  )
   .put(
+    checkSceneId,
+    handleExpressValidationErrors,
     checkSessionGameId,
     checkCoordinates,
     checkCharacter,
