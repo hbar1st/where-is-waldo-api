@@ -109,7 +109,7 @@ export async function getAllScenes(req, res) {
 }
 export async function getScene(req, res) {
   try {
-    const scene = await dbGetScene();
+    const scene = await dbGetScene(req.params.id);
     if (scene) {
       res.status(200).json({
         id: scene.id,
@@ -278,7 +278,8 @@ export async function evaluateAnswer(req, res) {
           resultObj["elapsed_time"] = elapsed_time;
 
           // find the top ten and see if the current game is in the top?
-          const topTen = await inTopTen(req.params.id,gameId);
+          const topTen = await inTopTen(req.params.id, gameId);
+          console.log("player is in the top ten: ", topTen.length)
           if (topTen.length > 0) {
             // send back the key topten: true if the score is in the highest ten scores
             resultObj.inTopTen = true;
@@ -330,6 +331,8 @@ export async function getTopTen(req, res) {
         gameTime = [{ elapsed_time: null }];
       }
       if (gameTime) {
+        
+        const gameId = req.session.gameIds[sceneId];
         console.log(gameTime)
         const elapsed_time = gameTime[0].elapsed_time;
         console.log("found elapsed_time of current game: ", elapsed_time, gameTime)
@@ -337,7 +340,7 @@ export async function getTopTen(req, res) {
           .status(200)
           .json({
             message: "Success",
-            id: sceneId,
+            id: gameId,
             elapsed_time,
             topTen,
           });
@@ -360,6 +363,7 @@ export async function setUsername(req, res) {
       if (gameId) {
         // find the top ten for this scene and see if the current game is in the top?
         const topTen = await inTopTen(req.params.id, gameId);
+        console.log("in setUsername: ",topTen.length)
         if (topTen.length > 0) {
           const game = await dbSetUsername(gameId, req.body.username);
           if (game) {

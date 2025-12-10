@@ -91,6 +91,7 @@ export async function getTopTen(sceneId) {
   return topTen;
 }
 
+
 export async function inTopTen(sceneId, gameId) {
   console.log("in inTopTen: ", sceneId, gameId);
 
@@ -106,6 +107,7 @@ FROM (
 ) AS top10
 WHERE id = ${gameId};`
   );
+  console.log("check top ten list: ", result)
   return result;
 }
 

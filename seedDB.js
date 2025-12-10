@@ -54,10 +54,10 @@ async function seedSecond() {
     res1 &&
     (await pool.query(
       `insert into answer (scene_id, character, location_x, location_y) 
-      values (${sceneId}, 'ODLAW', 6.87, 68.55),
-      (${sceneId}, 'WALDO', 40.45, 62.17) returning scene_id`
+      values (${sceneId}, 'ODLAW', 22.31, 67.70),
+      (${sceneId}, 'WALDO', 49.12, 19.13) returning scene_id`
     ));
-
+  
   return res2;
 }
 console.log("\nBegin table seeding operation.\n");

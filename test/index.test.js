@@ -72,16 +72,19 @@ describe("initial game setup", () => {
     expect(res.headers["set-cookie"]).toBeDefined();
     expect(res.body.scenes).toBeDefined();
     expect(res.body.scenes).toHaveLength(2);
-    expect(res.body.scenes).toEqual([
-      {
-        id: 1,
-        url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg",
-      },
-      {
-        id: 2,
-        url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1765246758/Where%27s%20Waldo/candy-scene-wally-odlaw.jpg",
-      },
-    ]);
+
+    const scene1Obj = {
+      id: 1,
+      level: 2,
+      url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1763249346/Where%27s%20Waldo/Wheres-Waldo-Space-Station-Super-High-Resolution-scaled.jpg",
+    };
+    const scene2Obj = {
+      id: 2,
+      level: 1,
+      url: "https://res.cloudinary.com/hbrwdfccc/image/upload/v1765246758/Where%27s%20Waldo/candy-scene-wally-odlaw.jpg",
+    };
+
+    res.body.scenes.forEach(value => expect(value).toBeOneOf([scene1Obj, scene2Obj]))
   });
 
   /** this route gets the url of the image we are playing where's waldo with */
@@ -166,19 +169,12 @@ describe("initial game setup", () => {
 
   /** this route gets the character names that belong to a specific scene */
   test("GET /scene/:id/characters happy path", async () => {
-    // just use the first id from the list of scenes available for this
-    const scenes = await agent
-      .get("/scene")
 
-      .set("Accept", "application/json");
-
-    const scene = scenes.body.scenes[0];
-    expect(scene.id).toBeTypeOf("number");
-    const sceneId = scene.id;
+    const sceneId = 1;
 
     if (sceneId) {
       console.log(`try to get characters for scene id: ${sceneId}`);
-      const route = `/scene/${sceneId}/characters`;
+      const route = `/scene/1/characters`;
       const res = await agent
         .get(route)
 
@@ -785,14 +781,8 @@ describe("test top ten", () => {
   });
 
   test("GET /scene/:id/topten happy path", async () => {
-    const scenes = await agent
-      .get("/scene")
 
-      .set("Accept", "application/json");
-
-    const scene = scenes.body.scenes[0];
-    expect(scene.id).toBeTypeOf("number");
-    const sceneId = scene.id;
+    const sceneId = 1;
 
     const topTen = await agent
       .get(`/scene/${sceneId}/topten`)
@@ -1136,14 +1126,14 @@ describe("test player in top ten for two scenes", () => {
 
     const res21 = await agent
       .put(`/scene/2/game/answer`)
-      .query({ x: 6.87, y: 68.55, character: "Odlaw" })
+      .query({ x: 22, y: 67, character: "Odlaw" })
       .set("Accept", "application/json");
 
     expect(res21.status).toEqual(201); //first correct answer
 
     const res22 = await agent
       .put("/scene/2/game/answer")
-      .query({ x: 40.45, y: 62.17, character: "Waldo" })
+      .query({ x: 49, y: 19, character: "Waldo" })
       .set("Accept", "application/json");
 
     expect(res22.status).toEqual(201); //second correct answer
