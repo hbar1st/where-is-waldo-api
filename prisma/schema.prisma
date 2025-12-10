@@ -33,6 +33,7 @@ model Game {
   gameAnswers Game_Answer[]
 
   @@map(name: "game")
+  @@unique([id, scene_id])
 }
 
 model Game_Answer {
@@ -51,6 +52,7 @@ model Game_Answer {
 model Scene {
   id      Int      @id @default(autoincrement())
   url     String   @unique
+  level   Int      @default(1)
   answers Answer[]
   games   Game[]
 

@@ -65,7 +65,7 @@ export const checkCharacter = [
     .bail()
     .custom(async (value, { req }) => {
       console.log("try to validate the character name exists for the scene");
-      const game = await getGame(req.session.gameId);
+      const game = await getGame(req.session.gameIds[req.params.id]);
       if (game) {
         console.log("game is: ", game);
         const characters = [];
@@ -96,7 +96,8 @@ export const checkCharacter = [
 ];
 
 export const checkSessionGameId = (req, res, next) => {
-  const gameId = req.session.gameId;
+  console.log("in checkSessionGameId: ", req.session.id, req.session.gameIds)
+  const gameId = req.session.gameIds[req.params.id];
   if (gameId) {
     next();
   } else {

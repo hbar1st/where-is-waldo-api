@@ -3,8 +3,10 @@ import { matchedData } from "express-validator";
 import * as gameSetup from "../db/gameSetup.js";
 const {
   getScene: dbGetScene,
+  getAllScenes: dbGetAllScenes,
   getSession,
   getGame: dbGetGame,
+  getGameByScene,
   getSceneCharacters,
   addGame,
   getGameScene,
@@ -22,7 +24,8 @@ const {
 
 /**
  * this method is sets up a new game only if the session doesn't have a gameId value already
- * it sets up the game with the first scene, username of 'anonymous' and the start time is set in epoch time //TODO need to fix that
+ * it sets up the game with the first scene if the params.id is not provided, 
+ * username of 'anonymous' and the start time is set in epoch time 
  *
  * Later on, the game row will be updated whenever the user finds new characters and completes the game (end time will be recorded plus name if given)
  *
@@ -30,17 +33,21 @@ const {
  */
 export async function setupGame(req, res, next) {
   const sid = req.session.id;
-  console.log("in setupGame: ", sid);
-  if (!req.session.gameId) {
+  const sceneId = req.params.id;
+
+  console.log("in setupGame: ", sid, sceneId);
+
+  if (!req.session.gameIds || !req.session.gameIds[sceneId]) {
     // insert a new game into the game table and update the session with the new game id
     console.log("make a new game");
     try {
-      const scene = await dbGetScene(); //gets the first and only scene for now
+      const scene = await dbGetScene(sceneId); //gets the first scene if sceneId is not provided
       if (scene) {
         const game = await addGame(scene.id);
         if (game) {
           console.log("game.id: ", game.id);
-          req.session.gameId = game.id;
+          req.session.gameIds ? req.session.gameIds[scene.id] = game.id 
+            : req.session.gameIds = { [scene.id]: game.id };
         } else {
           throw new AppError("Failed to setup a new game");
         }
@@ -55,19 +62,21 @@ export async function setupGame(req, res, next) {
   next();
 }
 
-export async function getGameID(sid) {
-  console.log("in getGameID: ", sid);
+/*
+export async function getGameIDs(sid) {
+  console.log("in getGameIDs: ", sid);
   try {
     const sData = await getSessionData(sid);
     console.log("retrieved the parsed data: ", sData);
     if (sData) {
-      return sData.cookie?.gameId;
+      return sData.cookie?.gameIds;
     }
   } catch (error) {
     console.error(error);
     throw new AppError("Failed to get the session data");
   }
-}
+  
+}*/
 
 export async function getSessionData(sid) {
   console.log("in getSessionData: ", sid);
@@ -86,9 +95,21 @@ export async function getSessionData(sid) {
   }
 }
 
+export async function getAllScenes(req, res) {
+  try {
+    const scenes = await dbGetAllScenes();
+    if (scenes) {
+      console.log("scenes: ", scenes)
+      res.status(200).json({scenes})
+    }
+  } catch (error) {
+    console.error(error);
+    throw new AppError("Failed to retrieve a list of all scenes")
+  }
+}
 export async function getScene(req, res) {
   try {
-    const scene = await dbGetScene();
+    const scene = await dbGetScene(req.params.id);
     if (scene) {
       res.status(200).json({
         id: scene.id,
@@ -126,11 +147,11 @@ export async function getCharacters(req, res) {
 }
 
 export async function getGameAnswers(req, res) {
-  console.log("in getGameAnswers: ", req.session.id)
-  
+  console.log("in getGameAnswers: ", req.session.id, req.params.id)
+  const sceneId = req.params.id;
   try {
     // extract the game_id from the session row
-    let gameId = req.session.gameId;
+    let gameId = req.session.gameIds[sceneId];
     if (gameId) {
       console.log("found a game id: ", gameId);
       const game = await dbGetGame(gameId);
@@ -149,12 +170,15 @@ export async function getGameAnswers(req, res) {
     throw error;
   }
 }
+
+// returns all the details of the game that is in the session 
+// if there is more than one there, just defaults to the first one in the list
 export async function getGame(req, res) {
-  console.log("in getGame: ", req.session.id);
+  console.log("in getGame: ", req.session.id, req.params.id);
 
   try {
     // extract the game_id from the session row
-    let gameId = req.session.gameId;
+    let gameId = req.session.gameIds[req.params.id];
     if (gameId) {
       console.log("found a game id: ", gameId);
       const game = await dbGetGame(gameId);
@@ -189,7 +213,7 @@ export async function getGame(req, res) {
       }
     } else {
       throw new AppError(
-        `failed to get a game id from the current session: ${req.session.id}`
+        `failed to get a game id from the current session: ${req.session.id} where gameIds is ${req.session.gameIds}`
       );
     }
   } catch (error) {
@@ -199,18 +223,18 @@ export async function getGame(req, res) {
 }
 
 export async function evaluateAnswer(req, res) {
-  console.log("in evaluateAnswer: ", req.query);
+  console.log("in evaluateAnswer: ", req.query, req.params.id);
   const x = req.query.x;
   const y = req.query.y;
   const characterName = req.query.character;
 
   const sid = req.session.id;
-  const gameId = req.session.gameId;
+  const gameId = req.session.gameIds[req.params.id];
 
   try {
-    const sceneId = await getGameScene(gameId);
+    const sceneId = req.params.id; //await getGameScene(gameId);
     const characterKey = await getCharacterKey(characterName);
-    const answerRow = await getAnswer(sceneId.scene_id, characterKey.character);
+    const answerRow = await getAnswer(sceneId, characterKey.character);
     if (answerRow) {
       if (
         inRange(answerRow.location_x, x, .7) &&
@@ -225,7 +249,7 @@ export async function evaluateAnswer(req, res) {
         );
         let [gameAnswerCount, expectedAnswerCount] = await Promise.all([
           getGameAnswerCount(gameId),
-          getSceneAnswerCount(sceneId.scene_id),
+          getSceneAnswerCount(sceneId),
         ]);
         console.log(
           "this game's answer count: ",
@@ -244,17 +268,18 @@ export async function evaluateAnswer(req, res) {
           const updatedGame = await endGame(gameId);
 
           // calculate the elapsed time
-          const end_time = calculateElapsedTime(
+          const elapsed_time = calculateElapsedTime(
             updatedGame.start_time,
             updatedGame.end_time
           );
-          console.log("elapsed time: ", end_time);
+          console.log("elapsed time: ", elapsed_time);
 
-          // send back the elapsed time as the end_time value
-          resultObj["end_time"] = end_time;
+          // send back the elapsed time 
+          resultObj["elapsed_time"] = elapsed_time;
 
           // find the top ten and see if the current game is in the top?
-          const topTen = await inTopTen(gameId);
+          const topTen = await inTopTen(req.params.id, gameId);
+          console.log("player is in the top ten: ", topTen.length)
           if (topTen.length > 0) {
             // send back the key topten: true if the score is in the highest ten scores
             resultObj.inTopTen = true;
@@ -280,11 +305,15 @@ export async function evaluateAnswer(req, res) {
 }
 
 export const checkSessionGameExists = async (req, res) => {
-  const gameId = req.session.gameId;
-  if (gameId) {
-    res.status(200).json({ message: "true" });
+  if (req.session.gameIds) {
+    const gameId = req.session.gameIds[req.params.id];
+    if (gameId) {
+      res.status(200).json({ message: "true" });
+    } else {
+      res.status(200).json({ message: "false" });
+    }
   } else {
-    res.status(200).json({ message: "false"});
+    res.status(200).json({ message: "false"})
   }
 };
 
@@ -296,19 +325,25 @@ export async function getTopTen(req, res) {
     if (topTen) {
       console.log(topTen);
       let gameTime = null;
-      if (req.session.gameId) {
-        gameTime = await getGameElapsedTime(req.session.gameId);
+      if (req.session.gameIds && req.session.gameIds[sceneId]) {
+        gameTime = await getGameElapsedTime(req.session.gameIds[sceneId]);
       } else {
-        gameTime = [{elapsed_time: null}]
+        gameTime = [{ elapsed_time: null }];
       }
       if (gameTime) {
-        // calculate the elapsed time
+        
+        const gameId = req.session.gameIds[sceneId];
         console.log(gameTime)
         const elapsed_time = gameTime[0].elapsed_time;
         console.log("found elapsed_time of current game: ", elapsed_time, gameTime)
         res
           .status(200)
-          .json({ message: "Success", id: req.session.gameId, elapsed_time, topTen });
+          .json({
+            message: "Success",
+            id: gameId,
+            elapsed_time,
+            topTen,
+          });
       } else {
         throw new AppError("Failed to get the current game values")
       }
@@ -322,26 +357,30 @@ export async function getTopTen(req, res) {
 }
 
 export async function setUsername(req, res) {
-  const gameId = req.session.gameId;
-  try {
-    // find the top ten and see if the current game is in the top?
-    const topTen = await inTopTen(gameId);
-    if (topTen.length > 0) {
-      const game = await dbSetUsername(gameId, req.body.username);
-      if (game) {
-        res.status(200).json({ message: "Success", game });
+  const gameId = req.session.gameIds[req.params.id];
+  
+    try {
+      if (gameId) {
+        // find the top ten for this scene and see if the current game is in the top?
+        const topTen = await inTopTen(req.params.id, gameId);
+        console.log("in setUsername: ",topTen.length)
+        if (topTen.length > 0) {
+          const game = await dbSetUsername(gameId, req.body.username);
+          if (game) {
+            res.status(200).json({ message: "Success", game });
+          } else {
+            throw new AppError("Failed to set the username for this game");
+          }
+        } else {
+          res.status(400).json({ message: "This game is not in the top ten" });
+        }
       } else {
-        throw new AppError("Failed to set the username for this game");
+        throw new AppError("Failed to get game id from the current session");
       }
-    } else {
-      res
-        .status(400)
-        .json({ message: "This game is not in the top ten"});
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
 }
 
 export function calculateElapsedTime(startTime, endTime) {
